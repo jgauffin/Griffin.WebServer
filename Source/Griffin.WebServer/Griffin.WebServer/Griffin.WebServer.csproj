@@ -1,0 +1,97 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProjectGuid>{7367ACDD-4D6D-493D-8327-467D4531B8C8}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>Griffin.WebServer</RootNamespace>
+    <AssemblyName>Griffin.WebServer</AssemblyName>
+    <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="Griffin.Networking">
+      <HintPath>..\packages\Griffin.Networking.0.5.1\lib\net40\Griffin.Networking.dll</HintPath>
+    </Reference>
+    <Reference Include="Griffin.Networking.Protocol.Http">
+      <HintPath>..\packages\Griffin.Networking.Protocol.Http.0.5-beta02\lib\net40\Griffin.Networking.Protocol.Http.dll</HintPath>
+    </Reference>
+    <Reference Include="System" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Xml.Linq" />
+    <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="Microsoft.CSharp" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="Files\ComposileFileService.cs" />
+    <Compile Include="Files\DiskFileService.cs" />
+    <Compile Include="Files\FileContext.cs" />
+    <Compile Include="Files\FileInformation.cs" />
+    <Compile Include="Files\IFileService.cs" />
+    <Compile Include="Files\MimeTypeProvider.cs" />
+    <Compile Include="HttpContext.cs" />
+    <Compile Include="HttpServer.cs" />
+    <Compile Include="HttpServerWorker.cs" />
+    <Compile Include="Modules\IAuthenticationModule.cs" />
+    <Compile Include="Modules\IAuthorizationModule.cs" />
+    <Compile Include="IHttpContext.cs" />
+    <Compile Include="Modules\IHttpModule.cs" />
+    <Compile Include="IItemStorage.cs" />
+    <Compile Include="IModuleManager.cs" />
+    <Compile Include="Modules\IRoutingModule.cs" />
+    <Compile Include="Modules\IWorkerModule.cs" />
+    <Compile Include="MemoryItemStorage.cs" />
+    <Compile Include="ModuleManager.cs" />
+    <Compile Include="Modules\ModuleResult.cs" />
+    <Compile Include="Modules\AuthenticationModule.cs" />
+    <Compile Include="Modules\BodyDecodingModule.cs" />
+    <Compile Include="Modules\ErrorModule.cs" />
+    <Compile Include="Files\FileModule.cs" />
+    <Compile Include="Modules\NamespaceDoc.cs" />
+    <Compile Include="Routing\RouterModule.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="RequestExtensions.cs" />
+    <Compile Include="Routing\DefaultDocumentRouter.cs" />
+    <Compile Include="Routing\IRequestRouter.cs" />
+    <Compile Include="Routing\RegexPattern.cs" />
+    <Compile Include="Routing\RegexRouter.cs" />
+    <Compile Include="ViewEngines\IViewEngine.cs" />
+    <Compile Include="ViewEngines\ViewContext.cs" />
+    <Compile Include="ViewEngines\ViewNotFoundException.cs" />
+    <Compile Include="ViewEngines\ViewService.cs" />
+    <Compile Include="WorkerConfiguration.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="packages.config" />
+  </ItemGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+</Project>
