@@ -4,6 +4,7 @@ using System.Linq;
 using System.Net;
 using System.Text;
 using System.Threading.Tasks;
+using Griffin.Networking.Logging;
 using Griffin.WebServer;
 using Griffin.WebServer.Files;
 
@@ -13,6 +14,8 @@ namespace DemoServer
     {
         static void Main(string[] args)
         {
+            LogManager.Assign(new SimpleLogManager<ConsoleLogger>());
+
             // Module manager handles all modules in the server
             var moduleManager = new ModuleManager();
 

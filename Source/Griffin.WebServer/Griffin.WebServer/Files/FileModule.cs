@@ -129,13 +129,17 @@ namespace Griffin.WebServer.Files
                 ranges.Parse(rangeHeader.Value, (int)fileContext.FileStream.Length);
                 context.Response.AddHeader("Content-Range", ranges.ToHtmlHeaderValue((int)fileContext.FileStream.Length));
                 context.Response.Body = new ByteRangeStream(ranges, fileContext.FileStream);
+                context.Response.ContentLength = ranges.TotalLength;
             }
             else
                 context.Response.Body = fileContext.FileStream;
 
             // do not include a body when the client only want's to get content information.
             if (context.Request.Method.Equals("HEAD", StringComparison.OrdinalIgnoreCase))
+            {
+                context.Response.Body.Dispose();
                 context.Response.Body = null;
+            }
 
             return ModuleResult.Stop;
         }
