@@ -8,10 +8,11 @@ namespace Griffin.WebServer
     /// <summary>
     /// Takes care of the module execution.
     /// </summary>
-    /// <remarks>Will catch all exceptions, the last one is always attached to <see cref="IHttpContext.LastException"/>.
-    /// 
+    /// <remarks><para>Important! The module manager will catch all exceptions, the last one is always attached to <see cref="IHttpContext.LastException"/>.</para>
+    /// <para>
     /// It will however not do anything with the exception. You either have to have an error module which checks <see cref="IHttpContext.LastException"/>
     /// in <c>EndRequest()</c> or override the server to handle the error in it.
+    /// </para>
     /// <para>Modules are invoked in the following order
     /// <list type="number">
     /// <item><see cref="IHttpModule.BeginRequest"/></item>

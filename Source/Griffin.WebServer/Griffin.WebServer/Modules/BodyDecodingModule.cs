@@ -2,6 +2,7 @@
 using System.Linq;
 using System.Net;
 using Griffin.Networking.Protocol.Http.Services;
+using Griffin.WebServer.Files;
 
 namespace Griffin.WebServer.Modules
 {
@@ -32,7 +33,7 @@ namespace Griffin.WebServer.Modules
         }
 
         /// <summary>
-        /// Gets or sets if we should set 
+        /// Gets or sets if we should stop processing the request if the mime type is not recognized.
         /// </summary>
         public bool BeRude { get; set; }
 
@@ -68,16 +69,18 @@ namespace Griffin.WebServer.Modules
         /// <remarks>Invoked in turn for all modules unless you return <see cref="ModuleResult.Stop"/>.</remarks>
         public ModuleResult HandleRequest(IHttpContext context)
         {
-            if (_decoders.Any(decoder => decoder.Decode(context.Request)))
+            foreach (var bodyDecoder in _decoders)
             {
-                return ModuleResult.Continue;
+                context.Request.Body.Position = 0;
+                if (bodyDecoder.Decode(context.Request))
+                    return ModuleResult.Continue;
             }
 
             if (!BeRude)
                 return ModuleResult.Continue;
 
             context.Response.StatusCode = (int) HttpStatusCode.UnsupportedMediaType;
-            context.Response.StatusDescription = "We do not support content-type: " + context.Request.ContentType;
+            context.Response.StatusDescription = "We do not support body decoding of Content-Type: " + context.Request.ContentType ;
             return ModuleResult.Stop;
         }
 
