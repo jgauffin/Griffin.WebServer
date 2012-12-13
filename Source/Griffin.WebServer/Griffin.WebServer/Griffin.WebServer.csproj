@@ -32,13 +32,13 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="Griffin.Networking, Version=0.5.3.0, Culture=neutral, processorArchitecture=MSIL">
+    <Reference Include="Griffin.Networking, Version=0.5.4.0, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\packages\Griffin.Networking.0.5.3\lib\net40\Griffin.Networking.dll</HintPath>
+      <HintPath>..\packages\Griffin.Networking.0.5.4\lib\net40\Griffin.Networking.dll</HintPath>
     </Reference>
     <Reference Include="Griffin.Networking.Protocol.Http, Version=0.5.0.0, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\packages\Griffin.Networking.Protocol.Http.0.5-beta08\lib\net40\Griffin.Networking.Protocol.Http.dll</HintPath>
+      <HintPath>..\packages\Griffin.Networking.Protocol.Http.0.5-beta09\lib\net40\Griffin.Networking.Protocol.Http.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />

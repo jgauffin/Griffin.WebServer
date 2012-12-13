@@ -69,6 +69,9 @@ namespace Griffin.WebServer.Modules
         /// <remarks>Invoked in turn for all modules unless you return <see cref="ModuleResult.Stop"/>.</remarks>
         public ModuleResult HandleRequest(IHttpContext context)
         {
+            if (context.Request.Body == null)
+                return ModuleResult.Continue;
+
             foreach (var bodyDecoder in _decoders)
             {
                 context.Request.Body.Position = 0;
