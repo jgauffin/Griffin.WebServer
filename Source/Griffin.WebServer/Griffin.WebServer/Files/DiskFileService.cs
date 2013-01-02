@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Security.Policy;
 
 namespace Griffin.WebServer.Files
 {
@@ -68,7 +69,7 @@ namespace Griffin.WebServer.Files
             if (!uri.AbsolutePath.StartsWith(_rootUri))
                 return null;
 
-            var relativeUri = uri.AbsolutePath.Remove(0, _rootUri.Length);
+            var relativeUri = Uri.UnescapeDataString(uri.AbsolutePath.Remove(0, _rootUri.Length));
             return Path.Combine(_basePath, relativeUri.TrimStart('/').Replace('/', '\\'));
         }
 
