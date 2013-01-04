@@ -2,6 +2,7 @@ using System;
 using System.Net;
 using Griffin.Networking.Protocol.Http;
 using Griffin.Networking.Protocol.Http.Protocol;
+using Griffin.WebServer.Modules;
 
 namespace Griffin.WebServer
 {
@@ -58,9 +59,17 @@ namespace Griffin.WebServer
 
             context.Response.AddHeader("X-Powered-By",
                                        "Griffin.Networking (http://github.com/jgauffin/griffin.networking)");
-            _configuration.ModuleManager.Invoke(context);
 
-            Send(context.Response);
+
+            _configuration.ModuleManager.InvokeAsync(context, SendResponse);
+        }
+
+        /// <summary>
+        /// Callback from the module manager
+        /// </summary>
+        protected virtual void SendResponse(IAsyncModuleResult result)
+        {
+            Send(result.Context.Response);
         }
     }
 }

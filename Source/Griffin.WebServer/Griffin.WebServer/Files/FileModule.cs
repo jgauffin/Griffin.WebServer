@@ -68,6 +68,12 @@ namespace Griffin.WebServer.Files
         {
         }
 
+        public void HandleRequestAsync(IHttpContext context, Action<IAsyncModuleResult> callback)
+        {
+            // just invoke the callback synchronously.
+            callback(new AsyncModuleResult(context, HandleRequest(context)));
+        }
+
         /// <summary>
         /// Handle the request.
         /// </summary>

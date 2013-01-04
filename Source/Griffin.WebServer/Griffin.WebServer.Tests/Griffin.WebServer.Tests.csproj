@@ -4,16 +4,15 @@
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProjectGuid>{7367ACDD-4D6D-493D-8327-467D4531B8C8}</ProjectGuid>
+    <ProjectGuid>{4D64F516-6B0F-4616-9348-8A04630050A4}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>Griffin.WebServer</RootNamespace>
-    <AssemblyName>Griffin.WebServer</AssemblyName>
-    <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
+    <RootNamespace>Griffin.WebServer.Tests</RootNamespace>
+    <AssemblyName>Griffin.WebServer.Tests</AssemblyName>
+    <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <SolutionDir Condition="$(SolutionDir) == '' Or $(SolutionDir) == '*Undefined*'">..\</SolutionDir>
     <RestorePackages>true</RestorePackages>
-    <TargetFrameworkProfile />
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -33,12 +32,10 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="Griffin.Networking, Version=0.5.4.0, Culture=neutral, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
+    <Reference Include="Griffin.Networking">
       <HintPath>..\packages\Griffin.Networking.0.5.4\lib\net40\Griffin.Networking.dll</HintPath>
     </Reference>
-    <Reference Include="Griffin.Networking.Protocol.Http, Version=0.5.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
+    <Reference Include="Griffin.Networking.Protocol.Http">
       <HintPath>..\packages\Griffin.Networking.Protocol.Http.0.5-beta09\lib\net40\Griffin.Networking.Protocol.Http.dll</HintPath>
     </Reference>
     <Reference Include="System" />
@@ -48,47 +45,14 @@
     <Reference Include="Microsoft.CSharp" />
     <Reference Include="System.Data" />
     <Reference Include="System.Xml" />
+    <Reference Include="xunit">
+      <HintPath>..\packages\xunit.1.9.1\lib\net20\xunit.dll</HintPath>
+    </Reference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Files\ComposileFileService.cs" />
-    <Compile Include="Files\DiskFileService.cs" />
-    <Compile Include="Files\FileContext.cs" />
-    <Compile Include="Files\FileInformation.cs" />
-    <Compile Include="Files\IFileService.cs" />
-    <Compile Include="Files\MimeTypeProvider.cs" />
-    <Compile Include="HttpContext.cs" />
-    <Compile Include="HttpServer.cs" />
-    <Compile Include="HttpServerWorker.cs" />
-    <Compile Include="Modules\AsyncModuleResult.cs" />
-    <Compile Include="Modules\IAsyncModuleResult.cs" />
-    <Compile Include="Modules\IAuthenticationModule.cs" />
-    <Compile Include="Modules\IAuthorizationModule.cs" />
-    <Compile Include="IHttpContext.cs" />
-    <Compile Include="Modules\IHttpModule.cs" />
-    <Compile Include="IItemStorage.cs" />
-    <Compile Include="IModuleManager.cs" />
-    <Compile Include="Modules\IRoutingModule.cs" />
-    <Compile Include="Modules\IWorkerModule.cs" />
-    <Compile Include="MemoryItemStorage.cs" />
-    <Compile Include="ModuleManager.cs" />
-    <Compile Include="Modules\ModuleResult.cs" />
-    <Compile Include="Modules\AuthenticationModule.cs" />
-    <Compile Include="Modules\BodyDecodingModule.cs" />
-    <Compile Include="Modules\ErrorModule.cs" />
-    <Compile Include="Files\FileModule.cs" />
-    <Compile Include="Modules\NamespaceDoc.cs" />
-    <Compile Include="Routing\RouterModule.cs" />
+    <Compile Include="Class1.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="RequestExtensions.cs" />
-    <Compile Include="Routing\DefaultDocumentRouter.cs" />
-    <Compile Include="Routing\IRequestRouter.cs" />
-    <Compile Include="Routing\RegexPattern.cs" />
-    <Compile Include="Routing\RegexRouter.cs" />
-    <Compile Include="ViewEngines\IViewEngine.cs" />
-    <Compile Include="ViewEngines\ViewContext.cs" />
-    <Compile Include="ViewEngines\ViewNotFoundException.cs" />
-    <Compile Include="ViewEngines\ViewService.cs" />
-    <Compile Include="WorkerConfiguration.cs" />
+    <Compile Include="ValueBinders\ValueBinderTests.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />

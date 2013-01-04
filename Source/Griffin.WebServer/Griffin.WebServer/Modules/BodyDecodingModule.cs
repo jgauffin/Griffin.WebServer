@@ -65,6 +65,19 @@ namespace Griffin.WebServer.Modules
         /// Handle the request.
         /// </summary>
         /// <param name="context">HTTP context</param>
+        /// <param name="callback">Invoked when the module has completed.</param>
+        /// <remarks>
+        /// Invoked in turn for all modules unless you return <see cref="ModuleResult.Stop" />.
+        /// </remarks>
+        public void HandleRequestAsync(IHttpContext context, Action<IAsyncModuleResult> callback)
+        {
+            callback(new AsyncModuleResult(context, HandleRequest(context)));
+        }
+
+        /// <summary>
+        /// Handle the request.
+        /// </summary>
+        /// <param name="context">HTTP context</param>
         /// <returns><see cref="ModuleResult.Stop"/> will stop all processing except <see cref="IHttpModule.EndRequest"/>.</returns>
         /// <remarks>Invoked in turn for all modules unless you return <see cref="ModuleResult.Stop"/>.</remarks>
         public ModuleResult HandleRequest(IHttpContext context)

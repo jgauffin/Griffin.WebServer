@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Net;
+using System.Threading.Tasks;
 using Griffin.Networking.Protocol.Http;
 using Griffin.Networking.Protocol.Http.Services.Authentication;
 

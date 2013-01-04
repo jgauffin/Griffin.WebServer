@@ -67,11 +67,9 @@ namespace Griffin.WebServer
         /// </summary>
         /// <param name="context"></param>
         /// <returns><c>true</c> if no modules have aborted the handling. Any module throwing an exception is also considered to be abort.</returns>
-        public bool Invoke(IHttpContext context)
+        public void InvokeAsync(IHttpContext context, Action<IAsyncModuleResult> callback)
         {
-            var canContinue = true;
-            canContinue = HandleBeginRequest(context);
-
+            var canContinue = HandleBeginRequest(context);
             if (canContinue)
                 canContinue = InvokeModules(context, _authenticationModules, InvokeAuthenticate);
             if (canContinue)
@@ -79,10 +77,55 @@ namespace Griffin.WebServer
             if (canContinue)
                 canContinue = InvokeModules(context, _authorizationModules, InvokeAuthorize);
             if (canContinue)
-                canContinue = InvokeModules(context, _workerModules, ProcessRequest);
+            {
+                var modules = _workerModules.GetEnumerator();
+                if (modules.MoveNext())
+                {
+                    modules.Current.HandleRequestAsync(context,
+                                                       result => InvokeNextWorker(result, modules, innerResult =>
+                                                           {
+                                                               HandleEndRequest(context);
+                                                               callback(innerResult);
+                                                           }));
+                }
+                else
+                {
+                    callback(new AsyncModuleResult(context, ModuleResult.Continue));
+                }
+            }
+            else
+            {
+                HandleEndRequest(context);
+                callback(new AsyncModuleResult(context, ModuleResult.Stop));
+            }
+        }
 
-            HandleEndRequest(context);
-            return canContinue;
+        private void InvokeNextWorker(IAsyncModuleResult result, IEnumerator<IWorkerModule> modules,
+                                      Action<IAsyncModuleResult> callback)
+        {
+            if (result.Result == ModuleResult.Stop)
+            {
+                callback(result);
+                return;
+            }
+
+            if (modules.MoveNext())
+            {
+                try
+                {
+                    modules.Current.HandleRequestAsync(result.Context, x => InvokeNextWorker(x, modules, callback));
+                }
+                catch (Exception err)
+                {
+                    result.Exception = err;
+                    result.Result = ModuleResult.Stop;
+                    callback(result);
+                }
+            }
+            else
+            {
+                callback(result);
+            }
         }
 
         #endregion
@@ -119,11 +162,6 @@ namespace Griffin.WebServer
                     context.LastException = err;
                 }
             }
-        }
-
-        private ModuleResult ProcessRequest(IWorkerModule module, IHttpContext context)
-        {
-            return module.HandleRequest(context);
         }
 
         private ModuleResult InvokeAuthorize(IAuthorizationModule module, IHttpContext context)

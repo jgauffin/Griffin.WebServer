@@ -18,6 +18,12 @@ namespace DemoServer
             
         }
 
+        public void HandleRequestAsync(IHttpContext context, Action<IAsyncModuleResult> callback)
+        {
+            // Since this module only supports sync
+            callback(new AsyncModuleResult(context, HandleRequest(context)));
+        }
+
         public ModuleResult HandleRequest(IHttpContext context)
         {
             if (context.Request.Form.Count > 0)

@@ -1,3 +1,4 @@
+using System;
 using Griffin.WebServer.Modules;
 
 namespace Griffin.WebServer
@@ -30,10 +31,10 @@ namespace Griffin.WebServer
         void Add(IHttpModule module);
 
         /// <summary>
-        /// Invoke all modules
+        /// Handle the request asynchronously.
         /// </summary>
-        /// <param name="context"></param>
-        /// <returns><c>true</c> if no modules have aborted the handling. Any module throwing an exception is also considered to be abort.</returns>
-        bool Invoke(IHttpContext context);
+        /// <param name="context">HTTP context</param>
+        /// <param name="callback">Callback to invoke when the processing is complete </param>
+        void InvokeAsync(IHttpContext context, Action<IAsyncModuleResult> callback);
     }
 }
