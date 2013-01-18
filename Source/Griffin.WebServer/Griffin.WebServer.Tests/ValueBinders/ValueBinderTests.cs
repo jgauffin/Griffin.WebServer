@@ -1,10 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
+﻿using System.Collections.Generic;
 using System.Text;
 using System.Threading.Tasks;
 using Griffin.Networking.Protocol.Http.Implementation;
-using Griffin.Networking.Protocol.Http.Protocol;
+using Griffin.WebServer.ModelBinders;
 using Xunit;
 
 namespace Griffin.WebServer.Tests.ValueBinders
@@ -27,10 +25,10 @@ namespace Griffin.WebServer.Tests.ValueBinders
             request.Form.Add("FirstName", "Arne");
 
             var modelMapper = new ModelMapper();
-            var user = (UserViewModel)modelMapper.Map(typeof(UserViewModel), request, "");
+            var actual = modelMapper.Bind<UserViewModel>(request, "");
 
-            Assert.Equal("Jonas", user.UserName);
-            Assert.Equal("Arne", user.FirstName);
+            Assert.Equal("Jonas", actual.UserName);
+            Assert.Equal("Arne", actual.FirstName);
         }
 
         [Fact]
@@ -42,7 +40,7 @@ namespace Griffin.WebServer.Tests.ValueBinders
             request.Form.Add("Rating", "22");
 
             var modelMapper = new ModelMapper();
-            var actual = (RatingViewModel)modelMapper.Map(typeof(RatingViewModel), request, "");
+            var actual = modelMapper.Bind<RatingViewModel>(request, "");
 
             Assert.Equal("Jonas", actual.Author.UserName);
             Assert.Equal("Arne", actual.Author.FirstName);
@@ -56,51 +54,77 @@ namespace Griffin.WebServer.Tests.ValueBinders
             request.Form.Add("Ages[]", "32");
 
             var modelMapper = new ModelMapper();
-            var actual = (SimpleArrayViewModel)modelMapper.Map(typeof(SimpleArrayViewModel), request, "");
+            var actual = modelMapper.Bind<SimpleArrayViewModel>(request, "");
 
             Assert.Equal(8, actual.Ages[0]);
             Assert.Equal(32, actual.Ages[1]);
         }
-    }
 
-    public class ModelMapper
-    {
-        public object Map(Type type, IRequest request, string prefix)
+        [Fact]
+        public void ViewModelWithArray_Indexed()
         {
-            var model = Activator.CreateInstance(type);
-            foreach (var property in model.GetType().GetProperties())
-            {
-                object value = null;
+            var request = new HttpRequest();
+            request.Form.Add("Users[0].FirstName", "Hobbe");
+            request.Form.Add("Users[0].Age", "32");
+            request.Form.Add("Users[1].FirstName", "Kalle");
+            request.Form.Add("Users[2].Age", "10");
 
-                // todo: Create a value converter for all .NET types.
-                if (!property.PropertyType.IsPrimitive && property.PropertyType != typeof(string))
-                {
-                    prefix += property.Name + ".";
-                    value = Map(property.PropertyType, request, prefix);
-                }
-                else if (property.PropertyType.IsArray)
-                {
-                    request.Form.Any(x => x.Value.StartsWith(prefix));
-                }
-                else
-                {
-                    var parameter = request.Form.Get(prefix + property.Name);
-                    if (parameter == null)
-                        continue;
+            var modelMapper = new ModelMapper();
+            var actual = modelMapper.Bind<UsersViewModel>(request, "");
 
-                    value = parameter.Value;
-                    if (!property.PropertyType.IsAssignableFrom(typeof(string)))
-                    {
-                        value = Convert.ChangeType(value, property.PropertyType);
-                    }
-                }
-
-                property.SetValue(model, value);
-            }
-
-            return model;
+            Assert.Equal("Hobbe", actual.Users[0].FirstName);
+            Assert.Equal("Kalle", actual.Users[1].FirstName);
         }
 
+        [Fact]
+        public void Array_Indexed()
+        {
+            var request = new HttpRequest();
+            request.Form.Add("users[0].FirstName", "Hobbe");
+            request.Form.Add("users[0].Age", "32");
+            request.Form.Add("users[1].FirstName", "Kalle");
+            request.Form.Add("users[2].Age", "10");
+
+            var modelMapper = new ModelMapper();
+            var actual = modelMapper.Bind<UserViewModel[]>(request, "users");
+
+            Assert.Equal("Hobbe", actual[0].FirstName);
+            Assert.Equal("Kalle", actual[1].FirstName);
+        }
+
+
+
+        [Fact]
+        public void Array_Associative()
+        {
+            var request = new HttpRequest();
+            request.Form.Add("Users[Jonas].FirstName", "Hobbe");
+            request.Form.Add("Users[Jonas].Age", "32");
+            request.Form.Add("Users[Arne].FirstName", "Kalle");
+            request.Form.Add("Users[Arne].Age", "10");
+
+            var modelMapper = new ModelMapper();
+            var actual = modelMapper.Bind<Dictionary<string, UserViewModel>>(request, "Users");
+
+            Assert.Equal("Hobbe", actual["Jonas"].FirstName);
+            Assert.Equal("Kalle", actual["Arne"].FirstName);
+        }
+
+        [Fact]
+        public void Array_AssociativeNumeric()
+        {
+            var request = new HttpRequest();
+            request.Form.Add("Users['0'].FirstName", "Hobbe");
+            request.Form.Add("Users['0'].Age", "32");
+            request.Form.Add("Users['1'].FirstName", "Kalle");
+            request.Form.Add("Users['1'].Age", "10");
+
+            var modelMapper = new ModelMapper();
+            var actual = modelMapper.Bind<SimpleAssocArrayViewModel>(request, "");
+
+            Assert.Equal("Hobbe", actual.Users["0"].FirstName);
+            Assert.Equal("Kalle", actual.Users["1"].FirstName);
+        }
     }
 
     public class SimpleArrayViewModel
@@ -108,7 +132,16 @@ namespace Griffin.WebServer.Tests.ValueBinders
         public int[] Ages { get; private set; }
     }
 
+    public class SimpleAssocArrayViewModel
+    {
+        public IDictionary<string, UserViewModel> Users { get; private set; }
+    }
 
+
+    public class UsersViewModel
+    {
+        public UserViewModel[] Users { get; set; }
+    }
     public class UserViewModel
     {
         public string UserName { get; private set; }

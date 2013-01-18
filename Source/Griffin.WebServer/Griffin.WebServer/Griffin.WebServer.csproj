@@ -59,6 +59,17 @@
     <Compile Include="HttpContext.cs" />
     <Compile Include="HttpServer.cs" />
     <Compile Include="HttpServerWorker.cs" />
+    <Compile Include="ModelBinders\ArrayModelBinder.cs" />
+    <Compile Include="ModelBinders\ClassBinder.cs" />
+    <Compile Include="ModelBinders\DictionaryModelBinder.cs" />
+    <Compile Include="ModelBinders\EnumBinder.cs" />
+    <Compile Include="ModelBinders\IModelBinder.cs" />
+    <Compile Include="ModelBinders\IModelBinderContext.cs" />
+    <Compile Include="ValueProviders\IValueProvider.cs" />
+    <Compile Include="ModelBinders\ModelBinderContext.cs" />
+    <Compile Include="ModelBinders\ModelMapper.cs" />
+    <Compile Include="ModelBinders\PrimitiveValueBinder.cs" />
+    <Compile Include="ValueProviders\RequestValueProvider.cs" />
     <Compile Include="Modules\AsyncModuleResult.cs" />
     <Compile Include="Modules\IAsyncModuleResult.cs" />
     <Compile Include="Modules\IAuthenticationModule.cs" />
@@ -93,6 +104,7 @@
   <ItemGroup>
     <None Include="packages.config" />
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Import Project="$(SolutionDir)\.nuget\nuget.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
