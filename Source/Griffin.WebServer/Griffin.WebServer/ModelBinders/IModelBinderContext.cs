@@ -16,12 +16,12 @@ namespace Griffin.WebServer.ModelBinders
         string Prefix { get; }
 
         /// <summary>
-        /// Gets type of model which we are currently mapping
+        /// Gets type of model which we are currently mapping (i.e. view model type)
         /// </summary>
         Type ModelType { get; }
 
         /// <summary>
-        /// Gets name of the model. Corresponds to the property name
+        /// Gets name of the model. Corresponds to the property or argument name
         /// </summary>
         /// <remarks>Empty =  root, otherwise the property to load.</remarks>
         string ModelName { get; }

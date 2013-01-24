@@ -6,6 +6,7 @@ namespace Griffin.WebServer.ValueProviders
     /// <summary>
     /// Used to load values from the data source
     /// </summary>
+    /// <remarks>Fields with exact form name should all be pushed to the same parameter (so that it got several values)</remarks>
     public interface IValueProvider
     {
         /// <summary>

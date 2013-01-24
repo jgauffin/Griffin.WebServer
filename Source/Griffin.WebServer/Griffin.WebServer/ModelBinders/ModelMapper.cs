@@ -12,11 +12,24 @@ namespace Griffin.WebServer.ModelBinders
 
         public ModelMapper()
         {
-            _binders.Add(new PrimitiveValueBinder());
-            _binders.Add(new EnumBinder());
+            _binders.Add(new PrimitiveModelBinder());
+            _binders.Add(new EnumModelBinder());
             _binders.Add(new ArrayModelBinder());
             _binders.Add(new DictionaryModelBinder());
             _binders.Add(new ClassBinder());
+        }
+
+        /// <summary>
+        /// Remove all binders
+        /// </summary>
+        public void Clear()
+        {
+            _binders.Clear();
+        }
+
+        public void AddBinder(IModelBinder binder)
+        {
+            _binders.Add(binder);
         }
 
 

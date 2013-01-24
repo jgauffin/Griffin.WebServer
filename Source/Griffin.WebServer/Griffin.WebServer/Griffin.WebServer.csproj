@@ -62,13 +62,14 @@
     <Compile Include="ModelBinders\ArrayModelBinder.cs" />
     <Compile Include="ModelBinders\ClassBinder.cs" />
     <Compile Include="ModelBinders\DictionaryModelBinder.cs" />
-    <Compile Include="ModelBinders\EnumBinder.cs" />
+    <Compile Include="ModelBinders\EnumModelBinder.cs" />
     <Compile Include="ModelBinders\IModelBinder.cs" />
     <Compile Include="ModelBinders\IModelBinderContext.cs" />
+    <Compile Include="ModelBinders\ModelBindingException.cs" />
     <Compile Include="ValueProviders\IValueProvider.cs" />
     <Compile Include="ModelBinders\ModelBinderContext.cs" />
     <Compile Include="ModelBinders\ModelMapper.cs" />
-    <Compile Include="ModelBinders\PrimitiveValueBinder.cs" />
+    <Compile Include="ModelBinders\PrimitiveModelBinder.cs" />
     <Compile Include="ValueProviders\RequestValueProvider.cs" />
     <Compile Include="Modules\AsyncModuleResult.cs" />
     <Compile Include="Modules\IAsyncModuleResult.cs" />
