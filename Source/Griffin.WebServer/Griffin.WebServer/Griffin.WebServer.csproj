@@ -50,6 +50,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Actions\ActionAttribute.cs" />
     <Compile Include="Files\ComposileFileService.cs" />
     <Compile Include="Files\DiskFileService.cs" />
     <Compile Include="Files\FileContext.cs" />
@@ -99,6 +100,7 @@
     <Compile Include="ViewEngines\ViewContext.cs" />
     <Compile Include="ViewEngines\ViewNotFoundException.cs" />
     <Compile Include="ViewEngines\ViewService.cs" />
+    <Compile Include="WebEx.cs" />
     <Compile Include="WorkerConfiguration.cs" />
   </ItemGroup>
   <ItemGroup>

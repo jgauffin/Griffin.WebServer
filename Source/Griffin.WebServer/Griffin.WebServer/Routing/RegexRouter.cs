@@ -29,7 +29,7 @@ namespace Griffin.WebServer.Routing
         /// <summary>
         /// Add a regex and default values
         /// </summary>
-        /// <param name="pattern">Pattern. A typical MVC pattern is <![CDATA[@"/(?<controller>[^/]+)/(?<action>[^/]+)?/(?<action>[^/]+).*"]]>.</param>
+        /// <param name="pattern">Pattern. A typical MVC pattern is <![CDATA[@"/(?<controller>[^/]+)/(?<action>[^/]+)?/(?<id>[^/]+).*"]]>.</param>
         /// <param name="defaults">For MVC it would be <c>new { controller = "home", action = "index", id = null }</c></param>
         public void Add(string pattern, object defaults)
         {
