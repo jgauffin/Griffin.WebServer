@@ -146,11 +146,13 @@ namespace Griffin.WebServer.Tests.ValueBinders
     {
         public string UserName { get; private set; }
         public string FirstName { get; private set; }
+        public int Age { get; set; }
     }
 
     public class RatingViewModel
     {
         public UserViewModel Author { get; set; }
+        public UsersViewModel Readers { get; set; }
         public int Rating { get; private set; }
     }
 }

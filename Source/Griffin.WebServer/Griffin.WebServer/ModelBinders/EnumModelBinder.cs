@@ -3,9 +3,10 @@
 namespace Griffin.WebServer.ModelBinders
 {
     /// <summary>
-    /// Can bind primitives and string
+    /// Can bind enums
     /// </summary>
-    public class PrimitiveValueBinder : IModelBinder
+    /// <remarks>The binder both supports integers and strings</remarks>
+    public class EnumModelBinder : IModelBinder
     {
         /// <summary>
         /// Determines whether this instance can bind the specified model.
@@ -16,7 +17,7 @@ namespace Griffin.WebServer.ModelBinders
         /// </returns>
         public bool CanBind(IModelBinderContext context)
         {
-            return context.ModelType.IsPrimitive || context.ModelType == typeof (string);
+            return context.ModelType.IsEnum;
         }
 
         /// <summary>
@@ -28,20 +29,14 @@ namespace Griffin.WebServer.ModelBinders
         /// </returns>
         public object Bind(IModelBinderContext context)
         {
-            var name = string.IsNullOrEmpty(context.Prefix)
-                           ? context.ModelName
-                           : context.Prefix + "." + context.ModelName;
-            var parameter = context.ValueProvider.Get(name);
-            if (parameter == null)
-                return null;
+            var parameter = context.ValueProvider.Get(context.Prefix + context.ModelName);
+            if (parameter == null || string.IsNullOrEmpty(parameter.Value))
+                return 0;
 
-            object value = parameter.Value;
-            if (!context.ModelType.IsAssignableFrom(typeof(string)))
-            {
-                value = Convert.ChangeType(value, context.ModelType);
-            }
 
-            return value;
+            return char.IsDigit(parameter.Value[0])
+                       ? int.Parse(parameter.Value)
+                       : Enum.Parse(context.ModelType, parameter.Value, true);
         }
     }
 }

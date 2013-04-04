@@ -16,7 +16,9 @@ namespace Griffin.WebServer.ModelBinders
         /// </returns>
         public bool CanBind(IModelBinderContext context)
         {
-            return context.ModelType.IsClass && !context.ModelType.IsAbstract && !context.ModelType.IsGenericType;
+            return context.ModelType.IsClass 
+                && !context.ModelType.IsAbstract 
+                && !context.ModelType.IsGenericType;
         }
 
         /// <summary>
@@ -28,6 +30,9 @@ namespace Griffin.WebServer.ModelBinders
         /// </returns>
         public object Bind(IModelBinderContext context)
         {
+            if (context.ModelType.GetConstructor(new Type[0]) == null)
+                throw new ModelBindingException("Do not have a default constructor.", context.ModelName, context.ModelType);
+
             var model = Activator.CreateInstance(context.ModelType);
             var prefix = string.IsNullOrEmpty(context.Prefix) ? context.ModelName : context.Prefix + "." + context.ModelName;
             foreach (var property in context.ModelType.GetProperties())
@@ -36,6 +41,8 @@ namespace Griffin.WebServer.ModelBinders
                     continue;
 
                 var value = context.Execute(property.PropertyType, prefix, property.Name);
+
+                
                 property.SetValue(model, value, null);
 
             }
