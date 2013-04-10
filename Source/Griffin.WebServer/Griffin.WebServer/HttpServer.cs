@@ -63,7 +63,7 @@ namespace Griffin.WebServer
         /// </summary>
         /// <param name="remoteEndPoint">IP address of the remote end point</param>
         /// <returns>Created client</returns>
-        public IServerService CreateClient(EndPoint remoteEndPoint)
+        public INetworkService CreateClient(EndPoint remoteEndPoint)
         {
             return new HttpServerWorker((IPEndPoint) remoteEndPoint, _workerConfiguration);
         }
@@ -90,5 +90,14 @@ namespace Griffin.WebServer
             if (ipAddress == null) throw new ArgumentNullException("ipAddress");
             _server.Start(new IPEndPoint(ipAddress, port));
         }
+
+        /// <summary>
+        /// Stop the server.
+        /// </summary>
+        public void Stop()
+        {
+            _server.Stop();
+        }
+
     }
 }

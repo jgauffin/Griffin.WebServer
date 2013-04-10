@@ -42,19 +42,18 @@ namespace Griffin.WebServer
         }
 
         /// <summary>
-        /// A new message have been received from the remote end.
+        /// We've received a HTTP request.
         /// </summary>
-        /// <param name="message"></param>
-        /// <remarks>You'll receive <see cref="IRequest"/> or <see cref="IResponse"/> depending on the type of application.</remarks>
-        public override void HandleReceive(object message)
+        /// <param name="request">HTTP request</param>
+        /// <exception cref="System.ArgumentNullException">message</exception>
+        public override void OnRequest(IRequest request)
         {
-            if (message == null) throw new ArgumentNullException("message");
             var context = new WebServer.HttpContext
                 {
                     Application = _configuration.Application,
                     Items = new MemoryItemStorage(),
-                    Request = (IRequest) message,
-                    Response = ((IRequest) message).CreateResponse(HttpStatusCode.OK, "Okey dokie")
+                    Request = request,
+                    Response = request.CreateResponse(HttpStatusCode.OK, "Okey dokie")
                 };
 
             context.Response.AddHeader("X-Powered-By",

@@ -136,6 +136,7 @@ namespace Griffin.WebServer.Files
                 context.Response.AddHeader("Content-Range", ranges.ToHtmlHeaderValue((int)fileContext.FileStream.Length));
                 context.Response.Body = new ByteRangeStream(ranges, fileContext.FileStream);
                 context.Response.ContentLength = ranges.TotalLength;
+                context.Response.StatusCode = 206;
             }
             else
                 context.Response.Body = fileContext.FileStream;
