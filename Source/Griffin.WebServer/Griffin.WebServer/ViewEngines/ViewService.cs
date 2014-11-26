@@ -50,10 +50,4 @@ namespace Griffin.WebServer.ViewEngines
             throw new ViewNotFoundException(context.ViewPath);
         }
     }
-
-    public class ViewEngineContext
-    {
-        public ViewContext ViewContext { get; set; }
-        public IFileService FileService { get; set; }
-    }
 }

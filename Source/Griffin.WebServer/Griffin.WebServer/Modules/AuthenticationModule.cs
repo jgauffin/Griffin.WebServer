@@ -1,8 +1,8 @@
 ﻿using System;
 using System.Net;
 using System.Threading.Tasks;
-using Griffin.Networking.Protocol.Http;
-using Griffin.Networking.Protocol.Http.Services.Authentication;
+using Griffin.Net.Protocols.Http;
+using Griffin.Net.Protocols.Http.Authentication;
 
 namespace Griffin.WebServer.Modules
 {
@@ -69,7 +69,7 @@ namespace Griffin.WebServer.Modules
             var principal = _principalFactory.Create(new PrincipalFactoryContext(context.Request, user));
             if (principal == null)
                 throw new HttpException(HttpStatusCode.InternalServerError,
-                                        "Failed to create a principal for " + user.Username);
+                                        string.Format("Failed to create a principal for '{0}'.", user));
 
             context.User = principal;
             return ModuleResult.Continue;

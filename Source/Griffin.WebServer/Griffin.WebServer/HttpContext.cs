@@ -1,7 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Security.Principal;
-using Griffin.Networking.Protocol.Http.Protocol;
+using Griffin.Net.Channels;
+using Griffin.Net.Protocols.Http;
 using Griffin.WebServer.Routing;
 
 namespace Griffin.WebServer
@@ -27,12 +28,12 @@ namespace Griffin.WebServer
         /// <summary>
         /// Incoming request
         /// </summary>
-        public IRequest Request { get; set; }
+        public IHttpRequest Request { get; set; }
 
         /// <summary>
         /// Response to send back
         /// </summary>
-        public IResponse Response { get; set; }
+        public IHttpResponse Response { get; set; }
 
         /// <summary>
         /// Can be used to store items through this request
@@ -59,6 +60,11 @@ namespace Griffin.WebServer
         /// Gets or sets currently logged in user.
         /// </summary>
         public IPrincipal User { get; set; }
+
+        /// <summary>
+        /// Channel connected
+        /// </summary>
+        internal ITcpChannel Channel { get; set; }
 
         /// <summary>
         /// Gets information stored for the route.
