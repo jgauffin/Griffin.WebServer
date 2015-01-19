@@ -36,9 +36,9 @@
     <Prefer32Bit>false</Prefer32Bit>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="Griffin.Core, Version=1.0.15.0, Culture=neutral, processorArchitecture=MSIL">
+    <Reference Include="Griffin.Core, Version=1.0.16.0, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\packages\Griffin.Framework.1.0.15\lib\net45\Griffin.Core.dll</HintPath>
+      <HintPath>..\packages\Griffin.Framework.1.0.16\lib\net45\Griffin.Core.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />

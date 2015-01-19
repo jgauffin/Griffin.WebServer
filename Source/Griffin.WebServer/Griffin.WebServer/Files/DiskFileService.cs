@@ -74,7 +74,7 @@ namespace Griffin.WebServer.Files
                 return null;
 
             var relativeUri = Uri.UnescapeDataString(uri.AbsolutePath.Remove(0, _rootUri.Length));
-            return Path.Combine(_basePath, relativeUri.TrimStart('/').Replace('/', '\\'));
+            return Path.Combine(_basePath, relativeUri.TrimStart('/').Replace('/', Path.DirectorySeparatorChar));
         }
 
         /// <summary>

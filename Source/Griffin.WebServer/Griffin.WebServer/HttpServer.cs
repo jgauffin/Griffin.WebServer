@@ -115,6 +115,7 @@ namespace Griffin.WebServer
             if (_listener != null)
                 throw new InvalidOperationException("Stop the server before restarting.");
 
+            
             _listener = new HttpListener(_configuration);
             _listener.BodyDecoder = BodyDecoder;
             _listener.MessageReceived = OnClientRequest;

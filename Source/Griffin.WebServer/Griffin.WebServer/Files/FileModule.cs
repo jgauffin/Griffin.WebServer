@@ -177,6 +177,10 @@ namespace Griffin.WebServer.Files
             foreach (var file in _fileService.GetFiles(context.Request.Uri))
             {
                 var fileUri = context.Request.Uri.AbsolutePath + file.Name;
+                if (!fileUri.EndsWith("/"))
+                    fileUri += "/";
+                fileUri += file.Name;
+
                 sb.AppendFormat(@"{4}<tr><td><a href=""{0}"">{1}</a></td><td>{2}</td><td style=""text-align: right"">{3}</td></tr>", fileUri, file.Name,
                                 file.LastModifiedAtUtc, file.Size, spaces);
                 sb.AppendLine();

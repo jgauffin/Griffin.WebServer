@@ -32,6 +32,12 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="FluentAssertions">
+      <HintPath>..\packages\FluentAssertions.3.2.2\lib\net45\FluentAssertions.dll</HintPath>
+    </Reference>
+    <Reference Include="FluentAssertions.Core">
+      <HintPath>..\packages\FluentAssertions.3.2.2\lib\net45\FluentAssertions.Core.dll</HintPath>
+    </Reference>
     <Reference Include="Griffin.Core">
       <HintPath>..\packages\Griffin.Framework.1.0.15\lib\net45\Griffin.Core.dll</HintPath>
     </Reference>
@@ -52,7 +58,8 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Class1.cs" />
+    <Compile Include="GithubIssues\Issue14_should_work_with_concurrent_requests.cs" />
+    <Compile Include="GithubIssues\Issue8CrashDuringDecodingOfHttpMessage.cs" />
     <Compile Include="ModelBinders\ArrayModelBinderTests.cs" />
     <Compile Include="ModelBinders\ClassBinderTests.cs" />
     <Compile Include="ModelBinders\EnumModelBinderTests.cs" />
