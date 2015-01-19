@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
-using Griffin.Networking.Protocol.Http.Protocol;
+using Griffin.Net.Protocols.Http;
 using Griffin.WebServer.ValueProviders;
 
 namespace Griffin.WebServer.Tests.ModelBinders
@@ -9,10 +9,10 @@ namespace Griffin.WebServer.Tests.ModelBinders
     {
         public ValueProvider()
         {
-            Parameters=new List<IParameter>();
+            Parameters = new List<IParameter>();
         }
-        
-        
+
+
         public List<IParameter> Parameters { get; set; }
         public IParameter Get(string fieldName)
         {

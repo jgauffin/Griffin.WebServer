@@ -1,8 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Text;
-using System.Threading.Tasks;
-using Griffin.Networking.Protocol.Http.Protocol;
 using Griffin.WebServer.ModelBinders;
 using Griffin.WebServer.Tests.ValueBinders;
 using NSubstitute;

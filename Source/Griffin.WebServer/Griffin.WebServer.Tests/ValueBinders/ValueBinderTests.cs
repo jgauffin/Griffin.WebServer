@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Text;
 using System.Threading.Tasks;
-using Griffin.Networking.Protocol.Http.Implementation;
+using Griffin.Net.Protocols.Http;
 using Griffin.WebServer.ModelBinders;
 using Xunit;
 
@@ -20,7 +20,7 @@ namespace Griffin.WebServer.Tests.ValueBinders
         [Fact]
         public void SimpleMapping()
         {
-            var request = new HttpRequest();
+            var request = new HttpRequest("GET", "/", "HTTP/1.1");
             request.Form.Add("UserName", "Jonas");
             request.Form.Add("FirstName", "Arne");
 
@@ -34,7 +34,7 @@ namespace Griffin.WebServer.Tests.ValueBinders
         [Fact]
         public void Nested()
         {
-            var request = new HttpRequest();
+            var request = new HttpRequest("GET", "/", "HTTP/1.1");
             request.Form.Add("Author.UserName", "Jonas");
             request.Form.Add("Author.FirstName", "Arne");
             request.Form.Add("Rating", "22");
@@ -49,7 +49,7 @@ namespace Griffin.WebServer.Tests.ValueBinders
         [Fact]
         public void SimpleArray()
         {
-            var request = new HttpRequest();
+            var request = new HttpRequest("GET", "/", "HTTP/1.1");
             request.Form.Add("Ages[]", "8");
             request.Form.Add("Ages[]", "32");
 
@@ -63,7 +63,7 @@ namespace Griffin.WebServer.Tests.ValueBinders
         [Fact]
         public void ViewModelWithArray_Indexed()
         {
-            var request = new HttpRequest();
+            var request = new HttpRequest("GET", "/", "HTTP/1.1");
             request.Form.Add("Users[0].FirstName", "Hobbe");
             request.Form.Add("Users[0].Age", "32");
             request.Form.Add("Users[1].FirstName", "Kalle");
@@ -79,7 +79,7 @@ namespace Griffin.WebServer.Tests.ValueBinders
         [Fact]
         public void Array_Indexed()
         {
-            var request = new HttpRequest();
+            var request = new HttpRequest("GET", "/", "HTTP/1.1");
             request.Form.Add("users[0].FirstName", "Hobbe");
             request.Form.Add("users[0].Age", "32");
             request.Form.Add("users[1].FirstName", "Kalle");
@@ -97,7 +97,7 @@ namespace Griffin.WebServer.Tests.ValueBinders
         [Fact]
         public void Array_Associative()
         {
-            var request = new HttpRequest();
+            var request = new HttpRequest("GET", "/", "HTTP/1.1");
             request.Form.Add("Users[Jonas].FirstName", "Hobbe");
             request.Form.Add("Users[Jonas].Age", "32");
             request.Form.Add("Users[Arne].FirstName", "Kalle");
@@ -113,7 +113,7 @@ namespace Griffin.WebServer.Tests.ValueBinders
         [Fact]
         public void Array_AssociativeNumeric()
         {
-            var request = new HttpRequest();
+            var request = new HttpRequest("GET", "/", "HTTP/1.1");
             request.Form.Add("Users['0'].FirstName", "Hobbe");
             request.Form.Add("Users['0'].Age", "32");
             request.Form.Add("Users['1'].FirstName", "Kalle");

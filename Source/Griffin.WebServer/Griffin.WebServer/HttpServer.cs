@@ -1,77 +1,99 @@
 ﻿using System;
 using System.Net;
-using Griffin.Networking.Buffers;
-using Griffin.Networking.Messaging;
-using Griffin.Networking.Protocol.Http;
-using Griffin.Networking.Servers;
+using System.Security.Cryptography.X509Certificates;
+using Griffin.Net;
+using Griffin.Net.Buffers;
+using Griffin.Net.Channels;
+using Griffin.Net.Protocols;
+using Griffin.Net.Protocols.Http;
+using Griffin.Net.Protocols.Serializers;
 using Griffin.WebServer.Modules;
+using HttpListener = Griffin.Net.Protocols.Http.HttpListener;
+
 
 namespace Griffin.WebServer
 {
     /// <summary>
-    /// Default HTTP Server implementation
+    ///     Default HTTP Server implementation
     /// </summary>
     /// <remarks>This implementation uses modules for everything</remarks>
-    public class HttpServer : IServiceFactory
+    public class HttpServer
     {
-        private readonly IBufferSliceStack _bufferSliceStack;
+        private readonly BufferSlicePool _bufferSlicePool;
         private readonly IModuleManager _moduleManager;
-        private readonly MessagingServer _server;
-        private readonly WorkerConfiguration _workerConfiguration;
+        private readonly ChannelTcpListenerConfiguration _configuration;
+        private HttpListener _listener;
+        
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="HttpServer" /> class.
+        ///     Initializes a new instance of the <see cref="HttpServer" /> class.
         /// </summary>
         /// <param name="moduleManager">The modules are used to process the HTTP requests. You need to specify at least one.</param>
         public HttpServer(IModuleManager moduleManager)
-            : this(moduleManager, new MessagingServerConfiguration(new HttpMessageFactory()))
         {
+            _moduleManager = moduleManager;
+            BodyDecoder = new CompositeIMessageSerializer();
+
+            _configuration = new ChannelTcpListenerConfiguration(() => new HttpMessageDecoder(BodyDecoder), () => new HttpMessageEncoder());
+            _bufferSlicePool = new BufferSlicePool(65535, 100);
+            ApplicationInfo = new MemoryItemStorage();
         }
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="HttpServer" /> class.
+        ///     Initializes a new instance of the <see cref="HttpServer" /> class.
         /// </summary>
         /// <param name="moduleManager">The modules are used to process the HTTP requests. You need to specify at least one.</param>
-        /// <param name="configuration">You can override the configuration to your likings. We suggest that you using the <see cref="HttpMessageFactory" /> to produce the messages.</param>
+        /// <param name="configuration">
+        ///     You can override the configuration to your likings.
+        /// </param>
         /// <exception cref="System.ArgumentNullException">moduleManager/configuration</exception>
-        public HttpServer(IModuleManager moduleManager, MessagingServerConfiguration configuration)
+        public HttpServer(IModuleManager moduleManager, ChannelTcpListenerConfiguration configuration)
         {
             if (moduleManager == null) throw new ArgumentNullException("moduleManager");
             if (configuration == null) throw new ArgumentNullException("configuration");
+
+            BodyDecoder = new CompositeIMessageSerializer();
             _moduleManager = moduleManager;
-            _server = new MessagingServer(this, configuration);
-            _bufferSliceStack = new BufferSliceStack(100, 65535);
+            _configuration = configuration;
+            _bufferSlicePool = new BufferSlicePool(65535, 100);
             ApplicationInfo = new MemoryItemStorage();
-            _workerConfiguration = new WorkerConfiguration
-                {
-                    Application = ApplicationInfo,
-                    BufferSliceStack = _bufferSliceStack,
-                    ModuleManager = _moduleManager
-                };
         }
 
         /// <summary>
-        /// You can fill this item with application specific information
+        /// if set, the body decoder will be used and the server will produce <see cref="HttpRequest"/> instead of <see cref="HttpRequestBase"/>.
         /// </summary>
-        /// <remarks>It will be supplied for every request in the <see cref="IHttpContext"/>.</remarks>
+        /// <remarks>
+        /// <para>Specified per default</para>
+        /// </remarks>
+        public IMessageSerializer BodyDecoder { get; set; }
+
+        /// <summary>
+        ///     You can fill this item with application specific information
+        /// </summary>
+        /// <remarks>
+        ///     It will be supplied for every request in the <see cref="IHttpContext" />.
+        /// </remarks>
         public IItemStorage ApplicationInfo { get; set; }
 
-        #region IServiceFactory Members
-
         /// <summary>
-        /// Create a new client
+        /// Gets port that the server is accepting connections on
         /// </summary>
-        /// <param name="remoteEndPoint">IP address of the remote end point</param>
-        /// <returns>Created client</returns>
-        public INetworkService CreateClient(EndPoint remoteEndPoint)
+        /// <value>
+        /// The local port.
+        /// </value>
+        /// <exception cref="System.InvalidOperationException">Listener must have been started first.</exception>
+        public int LocalPort
         {
-            return new HttpServerWorker((IPEndPoint) remoteEndPoint, _workerConfiguration);
+            get
+            {
+                if (_listener == null)
+                    throw new InvalidOperationException("Listener must have been started first.");
+                return _listener.LocalPort;
+            }
         }
 
-        #endregion
-
-        /// <summary>
-        /// Add a HTTP module
+    /// <summary>
+        ///     Add a HTTP module
         /// </summary>
         /// <param name="module">Module to include</param>
         /// <remarks>Modules are executed in the order they are added.</remarks>
@@ -85,19 +107,77 @@ namespace Griffin.WebServer
         /// </summary>
         /// <param name="ipAddress">Address to listen on</param>
         /// <param name="port">Port to listen on.</param>
+        /// <exception cref="System.ArgumentNullException">ipAddress</exception>
+        /// <exception cref="System.InvalidOperationException">Stop the server before restarting.</exception>
         public void Start(IPAddress ipAddress, int port)
         {
             if (ipAddress == null) throw new ArgumentNullException("ipAddress");
-            _server.Start(new IPEndPoint(ipAddress, port));
+            if (_listener != null)
+                throw new InvalidOperationException("Stop the server before restarting.");
+
+            
+            _listener = new HttpListener(_configuration);
+            _listener.BodyDecoder = BodyDecoder;
+            _listener.MessageReceived = OnClientRequest;
+            _listener.Start(ipAddress, port);
         }
 
         /// <summary>
-        /// Stop the server.
+        ///     Start the HTTP server
+        /// </summary>
+        /// <param name="ipAddress">Address to listen on</param>
+        /// <param name="port">Port to listen on.</param>
+        /// <example>
+        /// <p>You can load a certificate by doing the following:</p>
+        /// <code>
+        /// var certificate = new X509Certificate2(@"C:\certificates\yourCertificate", "yourpassword");
+        /// var server = new HttpServer(new ModuleManager());
+        /// server.Start(IPAddress.Any, 80, certifiate);
+        /// </code>
+        /// </example>
+        public void Start(IPAddress ipAddress, int port, X509Certificate certifiate)
+        {
+            if (ipAddress == null) throw new ArgumentNullException("ipAddress");
+            if (_listener != null)
+                throw new InvalidOperationException("Stop the server before restarting.");
+
+            var factory=new SecureTcpChannelFactory(new ServerSideSslStreamBuilder(certifiate));
+            _listener = new HttpListener();
+            _listener.ChannelFactory = factory;
+            _listener.MessageReceived = OnClientRequest;
+            _listener.Start(ipAddress, port);
+        }
+
+        private void OnClientRequest(ITcpChannel channel, object message)
+        {
+            var context = new HttpContext
+            {
+                Application = ApplicationInfo,
+                Channel = channel,
+                Items = new MemoryItemStorage(),
+                Request = (IHttpRequest) message,
+                Response = ((IHttpRequest) message).CreateResponse()
+            };
+
+            context.Response.AddHeader("X-Powered-By",
+                                       "Griffin.Framework (http://github.com/jgauffin/griffin.framework)");
+
+            _moduleManager.InvokeAsync(context, SendResponse);
+        }
+
+        private void SendResponse(IAsyncModuleResult obj)
+        {
+            var context = (HttpContext) obj.Context;
+            context.Channel.Send(obj.Context.Response);
+        }
+
+        /// <summary>
+        ///     Stop the server.
         /// </summary>
         public void Stop()
         {
-            _server.Stop();
+            _listener.Stop();
+            _listener = null;
         }
-
     }
 }

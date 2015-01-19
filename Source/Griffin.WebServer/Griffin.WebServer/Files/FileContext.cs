@@ -1,6 +1,6 @@
 ﻿using System;
 using System.IO;
-using Griffin.Networking.Protocol.Http.Protocol;
+using Griffin.Net.Protocols.Http;
 
 namespace Griffin.WebServer.Files
 {
@@ -31,7 +31,7 @@ namespace Griffin.WebServer.Files
         /// </summary>
         /// <param name="request">The request.</param>
         /// <param name="browserCacheDate">Usually the header "If-Modified-Since"</param>
-        public FileContext(IRequest request, DateTime browserCacheDate)
+        public FileContext(IHttpRequest request, DateTime browserCacheDate)
         {
             if (request == null) throw new ArgumentNullException("request");
             Request = request;
@@ -54,7 +54,7 @@ namespace Griffin.WebServer.Files
         /// <summary>
         /// Gets the request (the Uri specifies the wanted file)
         /// </summary>
-        public IRequest Request { get; private set; }
+        public IHttpRequest Request { get; private set; }
 
         /// <summary>
         /// Gets date when file was cached in the browser.

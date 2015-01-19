@@ -9,7 +9,7 @@
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>Griffin.WebServer</RootNamespace>
     <AssemblyName>Griffin.WebServer</AssemblyName>
-    <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
+    <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <SolutionDir Condition="$(SolutionDir) == '' Or $(SolutionDir) == '*Undefined*'">..\</SolutionDir>
     <RestorePackages>true</RestorePackages>
@@ -23,6 +23,7 @@
     <DefineConstants>DEBUG;TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
+    <Prefer32Bit>false</Prefer32Bit>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <DebugType>pdbonly</DebugType>
@@ -32,15 +33,12 @@
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
     <DocumentationFile>bin\Release\Griffin.WebServer.XML</DocumentationFile>
+    <Prefer32Bit>false</Prefer32Bit>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="Griffin.Networking, Version=0.5.5.0, Culture=neutral, processorArchitecture=MSIL">
+    <Reference Include="Griffin.Core, Version=1.0.16.0, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\packages\Griffin.Networking.0.5.5\lib\net40\Griffin.Networking.dll</HintPath>
-    </Reference>
-    <Reference Include="Griffin.Networking.Protocol.Http, Version=0.5.1.0, Culture=neutral, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\packages\Griffin.Networking.Protocol.Http.0.5.1\lib\net40\Griffin.Networking.Protocol.Http.dll</HintPath>
+      <HintPath>..\packages\Griffin.Framework.1.0.16\lib\net45\Griffin.Core.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
@@ -51,6 +49,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Files\Class1.cs" />
     <Compile Include="Files\ComposileFileService.cs" />
     <Compile Include="Files\DiskFileService.cs" />
     <Compile Include="Files\FileContext.cs" />
@@ -59,7 +58,6 @@
     <Compile Include="Files\MimeTypeProvider.cs" />
     <Compile Include="HttpContext.cs" />
     <Compile Include="HttpServer.cs" />
-    <Compile Include="HttpServerWorker.cs" />
     <Compile Include="ModelBinders\ArrayModelBinder.cs" />
     <Compile Include="ModelBinders\ClassBinder.cs" />
     <Compile Include="ModelBinders\DictionaryModelBinder.cs" />
@@ -99,9 +97,9 @@
     <Compile Include="Routing\RegexRouter.cs" />
     <Compile Include="ViewEngines\IViewEngine.cs" />
     <Compile Include="ViewEngines\ViewContext.cs" />
+    <Compile Include="ViewEngines\ViewEngineContext.cs" />
     <Compile Include="ViewEngines\ViewNotFoundException.cs" />
     <Compile Include="ViewEngines\ViewService.cs" />
-    <Compile Include="WorkerConfiguration.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />

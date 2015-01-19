@@ -1,5 +1,4 @@
-using System.Net;
-using Griffin.Networking.Protocol.Http;
+using Griffin.Net.Protocols.Http;
 
 namespace Griffin.WebServer.ViewEngines
 {
@@ -13,7 +12,7 @@ namespace Griffin.WebServer.ViewEngines
         /// </summary>
         /// <param name="viewPath">The view path.</param>
         public ViewNotFoundException(string viewPath)
-            : base(HttpStatusCode.InternalServerError, string.Format("Failed to find view '{0}'.", viewPath))
+            : base(System.Net.HttpStatusCode.InternalServerError, string.Format("Failed to find view '{0}'.", viewPath))
 
         {
             ViewPath = viewPath;

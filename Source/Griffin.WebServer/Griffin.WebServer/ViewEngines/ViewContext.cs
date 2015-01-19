@@ -28,7 +28,14 @@ namespace Griffin.WebServer.ViewEngines
         /// <summary>
         /// Model type
         /// </summary>
+        [Obsolete("Use 'ModelType'.")]
         public Type ModuleType { get; set; }
+
+        /// <summary>
+        /// Model type
+        /// </summary>
+        public Type ModelType { get; set; }
+
 
         /// <summary>
         /// Additional view data

@@ -53,6 +53,10 @@ namespace Griffin.WebServer.Files
 
 
             var date = File.GetLastWriteTimeUtc(fullPath);
+
+            // browser ignores second fractions.
+            date = date.AddTicks(-(date.Ticks % TimeSpan.TicksPerSecond));
+
             if (date <= context.BrowserCacheDate)
             {
                 context.SetNotModified(fullPath, date);
@@ -70,7 +74,7 @@ namespace Griffin.WebServer.Files
                 return null;
 
             var relativeUri = Uri.UnescapeDataString(uri.AbsolutePath.Remove(0, _rootUri.Length));
-            return Path.Combine(_basePath, relativeUri.TrimStart('/').Replace('/', '\\'));
+            return Path.Combine(_basePath, relativeUri.TrimStart('/').Replace('/', Path.DirectorySeparatorChar));
         }
 
         /// <summary>
