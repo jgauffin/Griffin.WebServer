@@ -56,7 +56,8 @@ namespace Griffin.WebServer.Files
 
             var streamPath = fullPath;
 
-            if (_substituteGzipFiles && context.Request.Headers["Accept-Encoding"].Contains("gzip"))
+            if (_substituteGzipFiles && context.Request.Headers["Accept-Encoding"] != null && 
+                context.Request.Headers["Accept-Encoding"].Contains("gzip"))
             {
                 var compressedPath = fullPath + ".gz";
                 if (File.Exists(compressedPath))
