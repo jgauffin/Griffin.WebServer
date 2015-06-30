@@ -50,6 +50,11 @@ namespace Griffin.WebServer.Files
         /// </summary>
         public bool IsModified { get; private set; }
 
+        /// <summary>
+        /// Get whether the requsted file was substituted for a gzip compressed version.
+        /// </summary>
+        public bool IsGzipSubstitute { get; private set; }
+
 
         /// <summary>
         /// Gets the request (the Uri specifies the wanted file)
@@ -112,6 +117,13 @@ namespace Griffin.WebServer.Files
             IsModified = false;
         }
 
+        /// <summary>
+        /// The file has been swapped for a gzip compressed version.
+        /// </summary>
+        public void SetGzipSubstitute()
+        {
+            IsGzipSubstitute = true;
+        }
 
     }
 }

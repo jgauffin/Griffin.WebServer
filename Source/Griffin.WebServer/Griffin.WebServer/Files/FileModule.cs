@@ -122,6 +122,11 @@ namespace Griffin.WebServer.Files
                 return ModuleResult.Stop;
             }
 
+            if (fileContext.IsGzipSubstitute)
+            {
+                context.Response.AddHeader("Content-Encoding", "gzip");
+            }
+
             var mimeType = MimeTypeProvider.Instance.Get(fileContext.Filename);
             if (mimeType == null)
             {

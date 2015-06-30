@@ -12,12 +12,14 @@ namespace Griffin.WebServer.Files
     {
         private readonly string _basePath;
         private readonly string _rootUri;
+        private readonly bool _substituteGzipFiles;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="CompositeFileService"/> class.
         /// </summary>
         /// <param name="rootFilePath">Path to serve files from.</param>
         /// <param name="rootUri">Serve all files which are located under this URI</param>
+        /// <param name="substituteGzipFiles">When enabled, if a file is requested and a file with the same name + .gz exists, that version will be served instead (so long as the client supports this)</param>
         /// <example>
         /// <code>
         /// var diskFiles = new DiskFileService("/public/", @"C:\www\public\");
@@ -27,7 +29,7 @@ namespace Griffin.WebServer.Files
         /// moduleManager.Add(module);
         /// </code>
         /// </example>
-        public DiskFileService(string rootUri, string rootFilePath)
+        public DiskFileService(string rootUri, string rootFilePath, bool substituteGzipFiles = false)
         {
             if (rootUri == null) throw new ArgumentNullException("rootUri");
             if (rootFilePath == null) throw new ArgumentNullException("rootFilePath");
@@ -51,6 +53,17 @@ namespace Griffin.WebServer.Files
             if (fullPath == null || !File.Exists(fullPath))
                 return false;
 
+            var streamPath = fullPath;
+
+            if (context.Request.Headers["Accept-Encoding"].Contains("gzip"))
+            {
+                var compressedPath = fullPath + ".gz";
+                if (File.Exists(compressedPath))
+                {
+                    streamPath = compressedPath;
+                    context.SetGzipSubstitute();
+                }
+            }
 
             var date = File.GetLastWriteTimeUtc(fullPath);
 
@@ -63,7 +76,7 @@ namespace Griffin.WebServer.Files
                 return true;
             }
 
-            var stream = new FileStream(fullPath, FileMode.Open, FileAccess.Read, FileShare.ReadWrite);
+            var stream = new FileStream(streamPath, FileMode.Open, FileAccess.Read, FileShare.ReadWrite);
             context.SetFile(fullPath, stream, date);
             return true;
         }
