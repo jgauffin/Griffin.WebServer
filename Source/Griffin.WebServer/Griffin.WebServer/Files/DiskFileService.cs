@@ -39,6 +39,7 @@ namespace Griffin.WebServer.Files
 
             _rootUri = rootUri;
             _basePath = rootFilePath;
+            _substituteGzipFiles = substituteGzipFiles;
         }
 
         #region IFileService Members
@@ -55,7 +56,7 @@ namespace Griffin.WebServer.Files
 
             var streamPath = fullPath;
 
-            if (context.Request.Headers["Accept-Encoding"].Contains("gzip"))
+            if (_substituteGzipFiles && context.Request.Headers["Accept-Encoding"].Contains("gzip"))
             {
                 var compressedPath = fullPath + ".gz";
                 if (File.Exists(compressedPath))
