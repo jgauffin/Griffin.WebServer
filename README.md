@@ -1,7 +1,7 @@
 Griffin.WebServer
 =================
 
-A web server built on top of Griffin.Networking.
+A web server built on top of Griffin.Framework.
 
 # Current features
 
