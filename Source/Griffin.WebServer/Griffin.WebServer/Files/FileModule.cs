@@ -3,8 +3,7 @@ using System.Globalization;
 using System.IO;
 using System.Net;
 using System.Text;
-using Griffin.Networking.Protocol.Http.Implementation;
-using Griffin.Networking.Protocol.Http.Protocol;
+using Griffin.Net.Protocols.Http;
 using Griffin.WebServer.Modules;
 
 namespace Griffin.WebServer.Files
@@ -40,7 +39,17 @@ namespace Griffin.WebServer.Files
         /// <summary>
         /// Gets or sets if we should allow file listing
         /// </summary>
-        public bool ListFiles { get; set; }
+        [Obsolete("Use 'AllowFileListing")]
+        public bool ListFiles
+        {
+            get { return AllowFileListing; }
+            set { AllowFileListing = value; }
+        }
+
+        /// <summary>
+        /// Gets or sets if we should allow file listing
+        /// </summary>
+        public bool AllowFileListing { get; set; }
 
         #region IWorkerModule Members
 
@@ -51,7 +60,7 @@ namespace Griffin.WebServer.Files
         /// <remarks>
         /// <para>The first method that is exeucted in the pipeline.</para>
         /// Try to avoid throwing exceptions if you can. Let all modules have a chance to handle this method. You may break the processing in any other method than the Begin/EndRequest methods.
-        /// <para>If you are going to handle the request, implement <see cref="IWorkerModule"/> and do it in the <see cref="IWorkerModule.HandleRequest"/> method.</para>
+        /// <para>If you are going to handle the request, implement <see cref="IWorkerModule"/> and do it in the <see cref="IWorkerModule.HandleRequestAsync"/> method.</para>
         /// </remarks>
         public void BeginRequest(IHttpContext context)
         {
@@ -83,12 +92,12 @@ namespace Griffin.WebServer.Files
         public ModuleResult HandleRequest(IHttpContext context)
         {
             // only handle GET and HEAD
-            if (!context.Request.Method.Equals("GET", StringComparison.OrdinalIgnoreCase)
-                && !context.Request.Method.Equals("HEAD", StringComparison.OrdinalIgnoreCase))
+            if (!context.Request.HttpMethod.Equals("GET", StringComparison.OrdinalIgnoreCase)
+                && !context.Request.HttpMethod.Equals("HEAD", StringComparison.OrdinalIgnoreCase))
                 return ModuleResult.Continue;
 
             // serve a directory
-            if (ListFiles)
+            if (AllowFileListing)
             {
                 if (TryGenerateDirectoryPage(context))
                     return ModuleResult.Stop;
@@ -96,7 +105,7 @@ namespace Griffin.WebServer.Files
 
             var header = context.Request.Headers["If-Modified-Since"];
             var time = header != null
-                           ? DateTime.ParseExact(header.Value, "R", CultureInfo.InvariantCulture)
+                           ? DateTime.ParseExact(header, "R", CultureInfo.InvariantCulture)
                            : DateTime.MinValue;
 
 
@@ -108,15 +117,20 @@ namespace Griffin.WebServer.Files
             if (!fileContext.IsModified)
             {
                 context.Response.StatusCode = (int)HttpStatusCode.NotModified;
-                context.Response.StatusDescription = "Was last modified " + fileContext.LastModifiedAtUtc.ToString("R");
+                context.Response.ReasonPhrase = "Was last modified " + fileContext.LastModifiedAtUtc.ToString("R");
                 return ModuleResult.Stop;
+            }
+
+            if (fileContext.IsGzipSubstitute)
+            {
+                context.Response.AddHeader("Content-Encoding", "gzip");
             }
 
             var mimeType = MimeTypeProvider.Instance.Get(fileContext.Filename);
             if (mimeType == null)
             {
                 context.Response.StatusCode = (int)HttpStatusCode.UnsupportedMediaType;
-                context.Response.StatusDescription = string.Format("File type '{0}' is not supported.",
+                context.Response.ReasonPhrase = string.Format("File type '{0}' is not supported.",
                                                                    Path.GetExtension(fileContext.Filename));
                 return ModuleResult.Stop;
             }
@@ -128,20 +142,21 @@ namespace Griffin.WebServer.Files
             context.Response.ContentLength = (int)fileContext.FileStream.Length;
 
             // ranged/partial transfers
-            var rangeHeader = context.Request.Headers["Range"];
-            if (rangeHeader != null && !string.IsNullOrEmpty(rangeHeader.Value))
+            var rangeStr = context.Request.Headers["Range"];
+            if (!string.IsNullOrEmpty(rangeStr))
             {
                 var ranges = new RangeCollection();
-                ranges.Parse(rangeHeader.Value, (int)fileContext.FileStream.Length);
+                ranges.Parse(rangeStr, (int)fileContext.FileStream.Length);
                 context.Response.AddHeader("Content-Range", ranges.ToHtmlHeaderValue((int)fileContext.FileStream.Length));
                 context.Response.Body = new ByteRangeStream(ranges, fileContext.FileStream);
                 context.Response.ContentLength = ranges.TotalLength;
+                context.Response.StatusCode = 206;
             }
             else
                 context.Response.Body = fileContext.FileStream;
 
             // do not include a body when the client only want's to get content information.
-            if (context.Request.Method.Equals("HEAD", StringComparison.OrdinalIgnoreCase))
+            if (context.Request.HttpMethod.Equals("HEAD", StringComparison.OrdinalIgnoreCase) && context.Response.Body != null)
             {
                 context.Response.Body.Dispose();
                 context.Response.Body = null;
@@ -155,10 +170,10 @@ namespace Griffin.WebServer.Files
             if (!_fileService.IsDirectory(context.Request.Uri))
                 return false;
 
-            int pos = ListFilesTemplate.IndexOf("{{Files}}");
+            int pos = ListFilesTemplate.IndexOf("{{Files}}", StringComparison.Ordinal);
             if (pos == -1)
                 throw new InvalidOperationException("Failed to find '{{Files}}' in the ListFilesTemplate.");
-            var newLine = ListFilesTemplate.LastIndexOf("\r\n", pos);
+            var newLine = ListFilesTemplate.LastIndexOf("\r\n", pos, StringComparison.Ordinal);
             var spaces = "".PadLeft(pos - newLine - 2); //exclude crlf;
 
             var sb = new StringBuilder();
@@ -166,6 +181,10 @@ namespace Griffin.WebServer.Files
             foreach (var file in _fileService.GetFiles(context.Request.Uri))
             {
                 var fileUri = context.Request.Uri.AbsolutePath + file.Name;
+                if (!fileUri.EndsWith("/"))
+                    fileUri += "/";
+                fileUri += file.Name;
+
                 sb.AppendFormat(@"{4}<tr><td><a href=""{0}"">{1}</a></td><td>{2}</td><td style=""text-align: right"">{3}</td></tr>", fileUri, file.Name,
                                 file.LastModifiedAtUtc, file.Size, spaces);
                 sb.AppendLine();
@@ -178,6 +197,9 @@ namespace Griffin.WebServer.Files
             return true;
         }
 
+        /// <summary>
+        /// Template which is used to list files. Should be a complete HTML page where <c>{{Files}}</c> will be replaced with a number of table rows.
+        /// </summary>
         public static string ListFilesTemplate = @"<html>
     <head>
         <title>Listing files</title>

@@ -1,6 +1,6 @@
 using System;
 using System.Collections.Generic;
-using Griffin.Networking.Logging;
+using Griffin.Logging;
 using Griffin.WebServer.Modules;
 
 namespace Griffin.WebServer

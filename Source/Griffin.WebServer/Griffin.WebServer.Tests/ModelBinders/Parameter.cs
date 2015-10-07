@@ -1,7 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
-using Griffin.Networking.Protocol.Http.Protocol;
+using Griffin.Net.Protocols.Http;
 
 namespace Griffin.WebServer.Tests.ModelBinders
 {

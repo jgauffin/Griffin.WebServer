@@ -1,5 +1,5 @@
 using System.Text;
-using Griffin.Networking.Protocol.Http.Protocol;
+using Griffin.Net.Protocols.Http;
 
 namespace Griffin.WebServer
 {
@@ -13,27 +13,32 @@ namespace Griffin.WebServer
         /// </summary>
         /// <param name="request"></param>
         /// <returns></returns>
-        public static string BuildErrorInfo(this IRequest request)
+        public static string BuildErrorInfo(this IHttpRequest request)
         {
             var sb = new StringBuilder();
             sb.AppendLine("URI: " + request.Uri);
 
-            sb.AppendLine("Querystring");
-            foreach (var kvp in request.QueryString)
+            sb.AppendLine("Querystring: " + request.Uri.Query);
+
+            if (request.Form.Count > 0)
             {
-                sb.AppendFormat("{0}: {1}\r\n", kvp, kvp.Value);
+                sb.AppendLine("Form");
+                foreach (var kvp in request.Form)
+                {
+                    sb.AppendFormat("{0}: {1}\r\n", kvp, kvp.Value);
+                }
+
             }
 
-            sb.AppendLine("Form");
-            foreach (var kvp in request.Form)
+            //TODO: Create an interface.
+            var req = request as HttpRequest;
+            if (req != null)
             {
-                sb.AppendFormat("{0}: {1}\r\n", kvp, kvp.Value);
-            }
-
-            sb.AppendLine("Cookies");
-            foreach (var kvp in request.Cookies)
-            {
-                sb.AppendFormat("{0}: {1}\r\n", kvp, kvp.Value);
+                sb.AppendLine("Cookies");
+                foreach (var kvp in req.Cookies)
+                {
+                    sb.AppendFormat("{0}: {1}\r\n", kvp, kvp.Value);
+                }
             }
 
             return sb.ToString();

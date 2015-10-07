@@ -1,6 +1,6 @@
 using System;
 using System.Security.Principal;
-using Griffin.Networking.Protocol.Http.Protocol;
+using Griffin.Net.Protocols.Http;
 using Griffin.WebServer.Routing;
 
 namespace Griffin.WebServer
@@ -13,12 +13,12 @@ namespace Griffin.WebServer
         /// <summary>
         /// Incoming request
         /// </summary>
-        IRequest Request { get; }
+        IHttpRequest Request { get; }
 
         /// <summary>
         /// Response to send back
         /// </summary>
-        IResponse Response { get; }
+        IHttpResponse Response { get; }
 
         /// <summary>
         /// Can be used to store items through this request

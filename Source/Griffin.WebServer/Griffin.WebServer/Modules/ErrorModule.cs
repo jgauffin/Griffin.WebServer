@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Net.Mail;
-using Griffin.Networking.Logging;
+using Griffin.Logging;
 
 namespace Griffin.WebServer.Modules
 {
@@ -73,7 +73,7 @@ namespace Griffin.WebServer.Modules
         /// <summary>
         /// Log error details to somemwhere
         /// </summary>
-        /// <param name="action"></param>
+        /// <param name="action">Will container all information about the HTTP request and the exception that ocurred.</param>
         /// <remarks>Will include request information, the logged in user and the exception details.</remarks>
         public void LogDetails(Action<string> action)
         {
@@ -93,7 +93,7 @@ namespace Griffin.WebServer.Modules
 
         private void SetErrorPage(IHttpContext httpContext, string errorPage)
         {
-            var bytes = httpContext.Response.ContentEncoding.GetBytes(errorPage);
+            var bytes = httpContext.Response.ContentCharset.GetBytes(errorPage);
             httpContext.Response.Body = new MemoryStream();
             httpContext.Response.Body.Write(bytes, 0, bytes.Length);
             httpContext.Response.ContentType = "text/html";

@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Concurrent;
 using System.Collections.Generic;
 
 namespace Griffin.WebServer
@@ -8,8 +9,8 @@ namespace Griffin.WebServer
     /// </summary>
     public class MemoryItemStorage : IItemStorage
     {
-        private readonly Dictionary<string, object> _dictionary =
-            new Dictionary<string, object>(StringComparer.OrdinalIgnoreCase);
+        private readonly ConcurrentDictionary<string, object> _dictionary =
+            new ConcurrentDictionary<string, object>(StringComparer.OrdinalIgnoreCase);
 
         #region IItemStorage Members
 
@@ -32,8 +33,9 @@ namespace Griffin.WebServer
                 if (name == null)
                     throw new ArgumentNullException("name");
 
+                object val;
                 if (value == null)
-                    _dictionary.Remove(name);
+                    _dictionary.TryRemove(name, out val);
                 else
                     _dictionary[name] = value;
             }

@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
-using Griffin.Networking.Protocol.Http.Implementation;
+using Griffin.Net.Protocols.Http;
 using Griffin.WebServer.ValueProviders;
 
 namespace Griffin.WebServer.ModelBinders
@@ -33,7 +33,7 @@ namespace Griffin.WebServer.ModelBinders
         }
 
 
-        public T Bind<T>(HttpRequest request, string name)
+        public T Bind<T>(IHttpRequest request, string name)
         {
             var provider = new RequestValueProvider(request);
 

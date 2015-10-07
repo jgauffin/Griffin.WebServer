@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
-using Griffin.Networking.Protocol.Http.Protocol;
+using Griffin.Net.Protocols.Http;
 
 namespace Griffin.WebServer.ValueProviders
 {
@@ -9,13 +9,13 @@ namespace Griffin.WebServer.ValueProviders
     /// </summary>
     public class RequestValueProvider : IValueProvider
     {
-        private readonly IRequest _request;
+        private readonly IHttpRequest _request;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="RequestValueProvider" /> class.
         /// </summary>
         /// <param name="request">The request.</param>
-        public RequestValueProvider(IRequest request)
+        public RequestValueProvider(IHttpRequest request)
         {
             _request = request;
         }
