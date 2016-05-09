@@ -10,6 +10,8 @@ namespace Griffin.WebServer.Files
     /// </summary>
     public class DiskFileService : IFileService
     {
+        public string DefaultHtml { get; set; }
+
         private readonly string _basePath;
         private readonly string _rootUri;
         private readonly bool _substituteGzipFiles;
@@ -40,6 +42,13 @@ namespace Griffin.WebServer.Files
             _rootUri = rootUri;
             _basePath = rootFilePath;
             _substituteGzipFiles = substituteGzipFiles;
+
+            DefaultHtml = "index.html";
+        }
+
+        private string getDefaultFile()
+        {
+            return Path.Combine(_basePath, DefaultHtml);
         }
 
         #region IFileService Members
@@ -51,7 +60,13 @@ namespace Griffin.WebServer.Files
         public virtual bool GetFile(FileContext context)
         {
             var fullPath = GetFullPath(context.Request.Uri);
-            if (fullPath == null || !File.Exists(fullPath))
+            if (fullPath == null)
+                return false;
+
+            if (fullPath == _basePath)
+                fullPath = getDefaultFile();
+
+            if (!File.Exists(fullPath))
                 return false;
 
             var streamPath = fullPath;
