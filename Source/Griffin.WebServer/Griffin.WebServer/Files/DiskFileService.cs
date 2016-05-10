@@ -51,7 +51,7 @@ namespace Griffin.WebServer.Files
 
         private string GetDefaultFile()
         {
-            return Path.Combine(_basePath, DefaultHtml);
+            return Path.Combine(_basePath, DefaultHtmlFile);
         }
 
         #region IFileService Members
@@ -67,7 +67,7 @@ namespace Griffin.WebServer.Files
                 return false;
 
             if (fullPath == _basePath)
-                fullPath = getDefaultFile();
+                fullPath = GetDefaultFile();
 
             if (!File.Exists(fullPath))
                 return false;
