@@ -10,8 +10,6 @@ namespace Griffin.WebServer.Files
     /// </summary>
     public class DiskFileService : IFileService
     {
-        public string DefaultHtml { get; set; }
-
         private readonly string _basePath;
         private readonly string _rootUri;
         private readonly bool _substituteGzipFiles;
@@ -43,10 +41,15 @@ namespace Griffin.WebServer.Files
             _basePath = rootFilePath;
             _substituteGzipFiles = substituteGzipFiles;
 
-            DefaultHtml = "index.html";
+            DefaultHtmlFile = "index.html";
         }
 
-        private string getDefaultFile()
+        /// <summary>
+        /// Default file to serve if none is specified in the context
+        /// </summary>
+        public string DefaultHtmlFile { get; set; }
+
+        private string GetDefaultFile()
         {
             return Path.Combine(_basePath, DefaultHtml);
         }
