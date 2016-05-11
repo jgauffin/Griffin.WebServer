@@ -40,6 +40,18 @@ namespace Griffin.WebServer.Files
             _rootUri = rootUri;
             _basePath = rootFilePath;
             _substituteGzipFiles = substituteGzipFiles;
+
+            DefaultHtmlFile = "index.html";
+        }
+
+        /// <summary>
+        /// Default file to serve if none is specified in the context
+        /// </summary>
+        public string DefaultHtmlFile { get; set; }
+
+        private string GetDefaultFile()
+        {
+            return Path.Combine(_basePath, DefaultHtmlFile);
         }
 
         #region IFileService Members
@@ -51,7 +63,13 @@ namespace Griffin.WebServer.Files
         public virtual bool GetFile(FileContext context)
         {
             var fullPath = GetFullPath(context.Request.Uri);
-            if (fullPath == null || !File.Exists(fullPath))
+            if (fullPath == null)
+                return false;
+
+            if (fullPath == _basePath)
+                fullPath = GetDefaultFile();
+
+            if (!File.Exists(fullPath))
                 return false;
 
             var streamPath = fullPath;
