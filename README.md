@@ -3,6 +3,9 @@ Griffin.WebServer
 
 A web server built on top of Griffin.Framework.
 
+[![Build status](https://ci.appveyor.com/api/projects/status/7kxcqkwia1fc9kd3?svg=true)](https://ci.appveyor.com/project/jgauffin/griffin-webserver) 
+[![GitHub issues](https://img.shields.io/github/issues/jgauffin/Griffin.WebServer.svg)](https://github.com/jgauffin/Griffin.WebServer/issues) 
+
 # Current features
 
 * Form/File handling, i.e. body decoding (multipart & UrlEncoded)
