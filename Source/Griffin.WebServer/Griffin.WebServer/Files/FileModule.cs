@@ -51,6 +51,7 @@ namespace Griffin.WebServer.Files
         /// </summary>
         public bool AllowFileListing { get; set; }
 
+
         #region IWorkerModule Members
 
         /// <summary>
@@ -143,6 +144,9 @@ namespace Griffin.WebServer.Files
 
             // ranged/partial transfers
             var rangeStr = context.Request.Headers["Range"];
+            if (rangeStr != null && rangeStr.Equals("bytes=0-", StringComparison.OrdinalIgnoreCase))
+                rangeStr = ""; //do not create range if everything is wanted.
+
             if (!string.IsNullOrEmpty(rangeStr))
             {
                 var ranges = new RangeCollection();
@@ -181,9 +185,7 @@ namespace Griffin.WebServer.Files
             foreach (var file in _fileService.GetFiles(context.Request.Uri))
             {
                 var fileUri = context.Request.Uri.AbsolutePath + file.Name;
-                if (!fileUri.EndsWith("/"))
-                    fileUri += "/";
-                fileUri += file.Name;
+
 
                 sb.AppendFormat(@"{4}<tr><td><a href=""{0}"">{1}</a></td><td>{2}</td><td style=""text-align: right"">{3}</td></tr>", fileUri, file.Name,
                                 file.LastModifiedAtUtc, file.Size, spaces);
