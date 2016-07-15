@@ -96,6 +96,7 @@ namespace Griffin.WebServer.Modules
             var bytes = httpContext.Response.ContentCharset.GetBytes(errorPage);
             httpContext.Response.Body = new MemoryStream();
             httpContext.Response.Body.Write(bytes, 0, bytes.Length);
+            httpContext.Response.Body.Position = 0;
             httpContext.Response.ContentType = "text/html";
         }
 

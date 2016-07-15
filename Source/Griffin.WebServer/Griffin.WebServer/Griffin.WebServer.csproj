@@ -49,7 +49,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Files\Class1.cs" />
+    <Compile Include="Files\ByteRangeStream.cs" />
     <Compile Include="Actions\ActionAttribute.cs" />
     <Compile Include="Files\ComposileFileService.cs" />
     <Compile Include="Files\DiskFileService.cs" />

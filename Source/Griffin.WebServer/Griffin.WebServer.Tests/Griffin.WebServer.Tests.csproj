@@ -68,6 +68,7 @@
     <Compile Include="ModelBinders\Parameter.cs" />
     <Compile Include="ModelBinders\PrimitiveModelBinderTests.cs" />
     <Compile Include="ModelBinders\ValueProvider.cs" />
+    <Compile Include="Modules\ErrorModuleTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="ValueBinders\ValueBinderTests.cs" />
   </ItemGroup>
