@@ -74,7 +74,7 @@ namespace Griffin.WebServer.Files
 
             var streamPath = fullPath;
 
-            if (_substituteGzipFiles && context.Request.Headers["Accept-Encoding"] != null && 
+            if (_substituteGzipFiles && context.Request.Headers["Accept-Encoding"] != null &&
                 context.Request.Headers["Accept-Encoding"].Contains("gzip"))
             {
                 var compressedPath = fullPath + ".gz";
@@ -130,7 +130,22 @@ namespace Griffin.WebServer.Files
         public IEnumerable<FileInformation> GetFiles(Uri uri)
         {
             var path = GetFullPath(uri);
-            if (path == null || !Directory.Exists(path))
+            if (path == null)
+                yield break;
+
+            if (!File.Exists(path))
+            {
+                var fi = new FileInfo(path);
+                yield return new FileInformation
+                {
+                    LastModifiedAtUtc = fi.LastWriteTimeUtc,
+                    Name = Path.GetFileName(path),
+                    Size = (int)fi.Length
+                };
+                yield break;
+            }
+
+            if (!Directory.Exists(path))
                 yield break;
 
             foreach (var file in Directory.GetFiles(path, "*.*"))
@@ -141,11 +156,11 @@ namespace Griffin.WebServer.Files
 
                 var info = new FileInfo(file);
                 yield return new FileInformation
-                    {
-                        LastModifiedAtUtc = info.LastWriteTimeUtc,
-                        Name = Path.GetFileName(file),
-                        Size = (int)info.Length
-                    };
+                {
+                    LastModifiedAtUtc = info.LastWriteTimeUtc,
+                    Name = Path.GetFileName(file),
+                    Size = (int)info.Length
+                };
             }
         }
 

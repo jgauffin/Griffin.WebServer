@@ -60,6 +60,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Actions\ActionInvoker.cs" />
+    <Compile Include="Files\DiskFileServiceTests.cs" />
     <Compile Include="GithubIssues\Issue14_should_work_with_concurrent_requests.cs" />
     <Compile Include="GithubIssues\Issue8CrashDuringDecodingOfHttpMessage.cs" />
     <Compile Include="ModelBinders\ArrayModelBinderTests.cs" />
