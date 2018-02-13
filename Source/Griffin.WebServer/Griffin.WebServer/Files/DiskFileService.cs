@@ -1,12 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
-using System.Security.Policy;
 
 namespace Griffin.WebServer.Files
 {
     /// <summary>
-    /// Serves files from the hard drive.
+    ///     Serves files from the hard drive.
     /// </summary>
     public class DiskFileService : IFileService
     {
@@ -15,13 +14,16 @@ namespace Griffin.WebServer.Files
         private readonly bool _substituteGzipFiles;
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="CompositeFileService"/> class.
+        ///     Initializes a new instance of the <see cref="CompositeFileService" /> class.
         /// </summary>
         /// <param name="rootFilePath">Path to serve files from.</param>
         /// <param name="rootUri">Serve all files which are located under this URI</param>
-        /// <param name="substituteGzipFiles">When enabled, if a file is requested and a file with the same name + .gz exists, that version will be served instead (so long as the client supports this)</param>
+        /// <param name="substituteGzipFiles">
+        ///     When enabled, if a file is requested and a file with the same name + .gz exists, that
+        ///     version will be served instead (so long as the client supports this)
+        /// </param>
         /// <example>
-        /// <code>
+        ///     <code>
         /// var diskFiles = new DiskFileService("/public/", @"C:\www\public\");
         /// var module = new FileModule(diskFiles);
         /// 
@@ -35,7 +37,7 @@ namespace Griffin.WebServer.Files
             if (rootFilePath == null) throw new ArgumentNullException("rootFilePath");
             if (!Directory.Exists(rootFilePath))
                 throw new ArgumentOutOfRangeException("rootFilePath", rootFilePath,
-                                                      "Failed to find path " + rootFilePath);
+                    "Failed to find path " + rootFilePath);
 
             _rootUri = rootUri;
             _basePath = rootFilePath;
@@ -45,7 +47,7 @@ namespace Griffin.WebServer.Files
         }
 
         /// <summary>
-        /// Default file to serve if none is specified in the context
+        ///     Default file to serve if none is specified in the context
         /// </summary>
         public string DefaultHtmlFile { get; set; }
 
@@ -57,7 +59,7 @@ namespace Griffin.WebServer.Files
         #region IFileService Members
 
         /// <summary>
-        /// Get a file
+        ///     Get a file
         /// </summary>
         /// <param name="context">Context used to locate and return files</param>
         public virtual bool GetFile(FileContext context)
@@ -111,7 +113,7 @@ namespace Griffin.WebServer.Files
         }
 
         /// <summary>
-        /// Gets if the specified url corresponds to a directory serving files
+        ///     Gets if the specified url corresponds to a directory serving files
         /// </summary>
         /// <param name="uri">Uri</param>
         /// <returns></returns>
@@ -119,11 +121,22 @@ namespace Griffin.WebServer.Files
         {
             var path = GetFullPath(uri);
             return path != null && Directory.Exists(path);
+        }
 
+        public bool FileExists(Uri uri)
+        {
+            var fullPath = GetFullPath(uri);
+            if (fullPath == null)
+                return false;
+
+            if (fullPath == _basePath)
+                fullPath = GetDefaultFile();
+
+            return File.Exists(fullPath);
         }
 
         /// <summary>
-        /// Get all files that exists in the specified directory
+        ///     Get all files that exists in the specified directory
         /// </summary>
         /// <param name="uri">Uri</param>
         /// <returns></returns>
@@ -133,14 +146,14 @@ namespace Griffin.WebServer.Files
             if (path == null)
                 yield break;
 
-            if (!File.Exists(path))
+            if (File.Exists(path))
             {
                 var fi = new FileInfo(path);
                 yield return new FileInformation
                 {
                     LastModifiedAtUtc = fi.LastWriteTimeUtc,
                     Name = Path.GetFileName(path),
-                    Size = (int)fi.Length
+                    Size = (int) fi.Length
                 };
                 yield break;
             }
@@ -159,13 +172,13 @@ namespace Griffin.WebServer.Files
                 {
                     LastModifiedAtUtc = info.LastWriteTimeUtc,
                     Name = Path.GetFileName(file),
-                    Size = (int)info.Length
+                    Size = (int) info.Length
                 };
             }
         }
 
         /// <summary>
-        /// Gets a list of all sub directores
+        ///     Gets a list of all sub directores
         /// </summary>
         /// <param name="uri">URI (as requested by the HTTP client) which should correspond to a directory.</param>
         /// <returns></returns>

@@ -28,8 +28,6 @@ namespace Griffin.WebServer.Tests.Files
         {
             var sut = new DiskFileService("/", _path);
 
-
-
             var actual = sut.GetFiles(new Uri("http://localhost/temp.txt"))
                 .ToList();
 

@@ -48,6 +48,11 @@ namespace Griffin.WebServer.Files
             return _fileServices.Any(service => service.IsDirectory(uri));
         }
 
+        public bool FileExists(Uri uri)
+        {
+            return _fileServices.Any(service => service.FileExists(uri));
+        }
+
         /// <summary>
         /// Get all files that exists in the specified directory
         /// </summary>
