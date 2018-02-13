@@ -173,6 +173,8 @@ namespace Griffin.WebServer.Files
         {
             if (!_fileService.IsDirectory(context.Request.Uri))
                 return false;
+            if (context.Request.Uri.AbsolutePath.Contains(":") || context.Request.Uri.AbsolutePath.Contains("."))
+                return false;
 
             int pos = ListFilesTemplate.IndexOf("{{Files}}", StringComparison.Ordinal);
             if (pos == -1)
@@ -182,6 +184,14 @@ namespace Griffin.WebServer.Files
 
             var sb = new StringBuilder();
             sb.Append(ListFilesTemplate.Substring(0, pos));
+            foreach (var directory in _fileService.GetDirectories(context.Request.Uri))
+            {
+                var directoryUri = context.Request.Uri.AbsolutePath + directory;
+                var dir = new DirectoryInfo(directory);
+                sb.AppendFormat(@"{4}<tr><td><a href=""{0}"">{1}</a></td><td>{2}</td><td style=""text-align: right"">{3}</td></tr>", directoryUri, dir.Name,
+                    dir.CreationTimeUtc, "&nbsp;", spaces);
+                sb.AppendLine();
+            }
             foreach (var file in _fileService.GetFiles(context.Request.Uri))
             {
                 var fileUri = context.Request.Uri.AbsolutePath + file.Name;

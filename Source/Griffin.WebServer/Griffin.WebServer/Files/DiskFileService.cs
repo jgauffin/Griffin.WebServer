@@ -184,17 +184,16 @@ namespace Griffin.WebServer.Files
         /// <returns></returns>
         public IEnumerable<string> GetDirectories(Uri uri)
         {
-            var path = GetFullPath(uri);
+            var path = GetFullPath(uri) + "\\"; //include a last slash since it's a directoy
             if (path == null || !Directory.Exists(path))
                 yield break;
 
-            yield return "..";
             foreach (var directory in Directory.GetDirectories(path))
             {
                 if (directory.StartsWith("."))
                     continue;
 
-                yield return directory.Remove(0, path.Length);
+                yield return directory.Remove(0, path.Length) + "\\";
             }
         }
 

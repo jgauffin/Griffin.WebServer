@@ -25,7 +25,11 @@ namespace DemoServer
             var fileService = new DiskFileService("/", string.Format(@"C:\Users\{0}\Downloads", Environment.UserName));
 
             // Create the file module and allow files to be listed.
-            var module = new FileModule(fileService) {AllowFileListing = true};
+            var module = new FileModule(fileService)
+            {
+                AllowFileListing = true,
+                
+            };
 
             // Add the module
             moduleManager.Add(module);
