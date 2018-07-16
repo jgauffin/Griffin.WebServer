@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Net;
+using System.Security.Authentication;
 using System.Security.Cryptography.X509Certificates;
 using Griffin.Net;
 using Griffin.Net.Buffers;
@@ -37,6 +38,7 @@ namespace Griffin.WebServer
             _configuration = new ChannelTcpListenerConfiguration(() => new HttpMessageDecoder(BodyDecoder), () => new HttpMessageEncoder());
             _bufferSlicePool = new BufferSlicePool(65535, 100);
             ApplicationInfo = new MemoryItemStorage();
+            AllowedSslProtocols = SslProtocols.Tls12;
         }
 
         /// <summary>
@@ -57,6 +59,7 @@ namespace Griffin.WebServer
             _configuration = configuration;
             _bufferSlicePool = new BufferSlicePool(65535, 100);
             ApplicationInfo = new MemoryItemStorage();
+            AllowedSslProtocols = SslProtocols.Tls12;
         }
 
         /// <summary>
@@ -74,6 +77,14 @@ namespace Griffin.WebServer
         ///     It will be supplied for every request in the <see cref="IHttpContext" />.
         /// </remarks>
         public IItemStorage ApplicationInfo { get; set; }
+
+        /// <summary>
+        ///     You can set the Ssl protocols (OR-ed) which are allowed for clients' connections
+        /// </summary>
+        /// <remarks>
+        ///     Default value is <c>SslProtocols.Tls12</c>
+        /// </remarks>
+        public SslProtocols AllowedSslProtocols { get; set; }
 
         /// <summary>
         /// Gets port that the server is accepting connections on
@@ -141,7 +152,7 @@ namespace Griffin.WebServer
             if (_listener != null)
                 throw new InvalidOperationException("Stop the server before restarting.");
 
-            var factory=new SecureTcpChannelFactory(new ServerSideSslStreamBuilder(certifiate));
+            var factory=new SecureTcpChannelFactory(new ServerSideSslStreamBuilder(certifiate, AllowedSslProtocols));
             _listener = new HttpListener();
             _listener.ChannelFactory = factory;
             _listener.MessageReceived = OnClientRequest;
