@@ -187,7 +187,7 @@ namespace Griffin.WebServer
         /// </summary>
         public void Stop()
         {
-            _listener.Stop();
+            _listener?.Stop();
             _listener = null;
         }
     }
