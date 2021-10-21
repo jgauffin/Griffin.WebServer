@@ -25,12 +25,12 @@ namespace Griffin.WebServer.Files
         /// <param name="innerStream">The inner stream which we should transfer a range from. The stream is owned by this class.</param>
         public ByteRangeStream(RangeCollection ranges, Stream innerStream)
         {
-            if (innerStream == null) throw new ArgumentNullException("innerStream");
+            if (innerStream == null) throw new ArgumentNullException(nameof(innerStream));
             if (innerStream.Position != 0)
                 throw new ArgumentException("The stream must be at position 0 for this range class to work",
-                                            "innerStream");
-            if (!innerStream.CanSeek) throw new ArgumentException("Stream must be seekable.", "innerStream");
-            if (!innerStream.CanRead) throw new ArgumentException("Stream must be readablle", "innerStream");
+                                            nameof(innerStream));
+            if (!innerStream.CanSeek) throw new ArgumentException("Stream must be seekable.", nameof(innerStream));
+            if (!innerStream.CanRead) throw new ArgumentException("Stream must be readablle", nameof(innerStream));
 
             _ranges = ranges;
             _innerStream = innerStream;
@@ -149,15 +149,15 @@ namespace Griffin.WebServer.Files
         public override int Read(byte[] buffer, int offset, int count)
         {
             if (offset + count > buffer.Length)
-                throw new ArgumentOutOfRangeException("count", offset + count, string.Format("Offset+Count larger than the buffer size ({0} bytes).", buffer.Length));
+                throw new ArgumentOutOfRangeException(nameof(count), offset + count, string.Format("Offset+Count larger than the buffer size ({0} bytes).", buffer.Length));
             if (count - offset > _bytesRead + _ranges.TotalLength)
-                throw new ArgumentOutOfRangeException("count", count, string.Format("Trying to read more then is left in the ranges ({0} bytes).", (_ranges.TotalLength - _bytesRead)));
+                throw new ArgumentOutOfRangeException(nameof(count), count, string.Format("Trying to read more then is left in the ranges ({0} bytes).", (_ranges.TotalLength - _bytesRead)));
 
             var bytesToRead = count;
             while (true)
             {
                 if (_currentRangeIndex >= _ranges.Count)
-                    throw new ArgumentOutOfRangeException("count", count,
+                    throw new ArgumentOutOfRangeException(nameof(count), count,
                                                           "Tried to read more bytes when all ranges has been read.");
 
                 var range = _ranges[_currentRangeIndex];
