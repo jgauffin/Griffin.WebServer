@@ -1,116 +1,20 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
-<Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
-  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+﻿<Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
-    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
-    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProjectGuid>{7367ACDD-4D6D-493D-8327-467D4531B8C8}</ProjectGuid>
+    <TargetFrameworks>netstandard2.0;net45;net451;net461</TargetFrameworks>
     <OutputType>Library</OutputType>
-    <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>Griffin.WebServer</RootNamespace>
-    <AssemblyName>Griffin.WebServer</AssemblyName>
-    <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
-    <FileAlignment>512</FileAlignment>
     <SolutionDir Condition="$(SolutionDir) == '' Or $(SolutionDir) == '*Undefined*'">..\</SolutionDir>
     <RestorePackages>true</RestorePackages>
-    <TargetFrameworkProfile />
-  </PropertyGroup>
-  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
-    <DebugSymbols>true</DebugSymbols>
-    <DebugType>full</DebugType>
-    <Optimize>false</Optimize>
-    <OutputPath>bin\Debug\</OutputPath>
-    <DefineConstants>DEBUG;TRACE</DefineConstants>
-    <ErrorReport>prompt</ErrorReport>
-    <WarningLevel>4</WarningLevel>
-    <Prefer32Bit>false</Prefer32Bit>
+    <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
-    <DebugType>pdbonly</DebugType>
-    <Optimize>true</Optimize>
-    <OutputPath>bin\Release\</OutputPath>
-    <DefineConstants>TRACE</DefineConstants>
-    <ErrorReport>prompt</ErrorReport>
-    <WarningLevel>4</WarningLevel>
     <DocumentationFile>bin\Release\Griffin.WebServer.XML</DocumentationFile>
-    <Prefer32Bit>false</Prefer32Bit>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="Griffin.Core, Version=1.0.42.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\Griffin.Framework.1.0.42\lib\net45\Griffin.Core.dll</HintPath>
-    </Reference>
-    <Reference Include="System" />
-    <Reference Include="System.Core" />
-    <Reference Include="System.Xml.Linq" />
-    <Reference Include="System.Data.DataSetExtensions" />
-    <Reference Include="Microsoft.CSharp" />
-    <Reference Include="System.Data" />
-    <Reference Include="System.Xml" />
+    <PackageReference Include="Griffin.Framework">
+      <Version>2.1.1</Version>
+    </PackageReference>
+    <PackageReference Include="Microsoft.CSharp" Version="4.7.0" />
+    <PackageReference Include="System.Data.DataSetExtensions" Version="4.5.0" />
   </ItemGroup>
-  <ItemGroup>
-    <Compile Include="Files\ByteRangeStream.cs" />
-    <Compile Include="Actions\ActionAttribute.cs" />
-    <Compile Include="Files\ComposileFileService.cs" />
-    <Compile Include="Files\DiskFileService.cs" />
-    <Compile Include="Files\FileContext.cs" />
-    <Compile Include="Files\FileInformation.cs" />
-    <Compile Include="Files\IFileService.cs" />
-    <Compile Include="Files\MimeTypeProvider.cs" />
-    <Compile Include="HttpContext.cs" />
-    <Compile Include="HttpServer.cs" />
-    <Compile Include="ModelBinders\ArrayModelBinder.cs" />
-    <Compile Include="ModelBinders\ClassBinder.cs" />
-    <Compile Include="ModelBinders\DictionaryModelBinder.cs" />
-    <Compile Include="ModelBinders\EnumModelBinder.cs" />
-    <Compile Include="ModelBinders\IModelBinder.cs" />
-    <Compile Include="ModelBinders\IModelBinderContext.cs" />
-    <Compile Include="ModelBinders\ModelBindingException.cs" />
-    <Compile Include="ValueProviders\IValueProvider.cs" />
-    <Compile Include="ModelBinders\ModelBinderContext.cs" />
-    <Compile Include="ModelBinders\ModelMapper.cs" />
-    <Compile Include="ModelBinders\PrimitiveModelBinder.cs" />
-    <Compile Include="ValueProviders\RequestValueProvider.cs" />
-    <Compile Include="Modules\AsyncModuleResult.cs" />
-    <Compile Include="Modules\IAsyncModuleResult.cs" />
-    <Compile Include="Modules\IAuthenticationModule.cs" />
-    <Compile Include="Modules\IAuthorizationModule.cs" />
-    <Compile Include="IHttpContext.cs" />
-    <Compile Include="Modules\IHttpModule.cs" />
-    <Compile Include="IItemStorage.cs" />
-    <Compile Include="IModuleManager.cs" />
-    <Compile Include="Modules\IRoutingModule.cs" />
-    <Compile Include="Modules\IWorkerModule.cs" />
-    <Compile Include="MemoryItemStorage.cs" />
-    <Compile Include="ModuleManager.cs" />
-    <Compile Include="Modules\ModuleResult.cs" />
-    <Compile Include="Modules\AuthenticationModule.cs" />
-    <Compile Include="Modules\BodyDecodingModule.cs" />
-    <Compile Include="Modules\ErrorModule.cs" />
-    <Compile Include="Files\FileModule.cs" />
-    <Compile Include="Modules\NamespaceDoc.cs" />
-    <Compile Include="Routing\RouterModule.cs" />
-    <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="RequestExtensions.cs" />
-    <Compile Include="Routing\DefaultDocumentRouter.cs" />
-    <Compile Include="Routing\IRequestRouter.cs" />
-    <Compile Include="Routing\RegexPattern.cs" />
-    <Compile Include="Routing\RegexRouter.cs" />
-    <Compile Include="ViewEngines\IViewEngine.cs" />
-    <Compile Include="ViewEngines\ViewContext.cs" />
-    <Compile Include="ViewEngines\ViewEngineContext.cs" />
-    <Compile Include="ViewEngines\ViewNotFoundException.cs" />
-    <Compile Include="ViewEngines\ViewService.cs" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="packages.config" />
-  </ItemGroup>
-  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Import Project="$(SolutionDir)\.nuget\nuget.targets" />
-  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
-       Other similar extension points exist, see Microsoft.Common.targets.
-  <Target Name="BeforeBuild">
-  </Target>
-  <Target Name="AfterBuild">
-  </Target>
-  -->
 </Project>
