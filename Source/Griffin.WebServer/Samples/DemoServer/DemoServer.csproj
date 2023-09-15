@@ -10,7 +10,6 @@
     <ProjectReference Include="..\..\Griffin.WebServer\Griffin.WebServer.csproj" />
   </ItemGroup>
   <ItemGroup>
-    <PackageReference Include="FluentAssertions" Version="5.0.0" />
     <PackageReference Include="Griffin.Framework" Version="2.1.1" />
   </ItemGroup>
   <Import Project="$(SolutionDir)\.nuget\nuget.targets" />
