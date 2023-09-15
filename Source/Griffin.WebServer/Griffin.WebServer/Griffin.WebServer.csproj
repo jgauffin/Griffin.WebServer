@@ -5,6 +5,15 @@
     <SolutionDir Condition="$(SolutionDir) == '' Or $(SolutionDir) == '*Undefined*'">..\</SolutionDir>
     <RestorePackages>true</RestorePackages>
     <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
+    <Title>Griffin.WebServer</Title>
+    <Product>Griffin.WebServer</Product>
+    <Description>A web server built on top of Griffin.Framework</Description>
+    <Version>0.5.3</Version>
+    <RepositoryType>git</RepositoryType>
+    <RepositoryUrl>https://github.com/jgauffin/Griffin.WebServer/</RepositoryUrl>
+    <PackageProjectUrl>https://github.com/jgauffin/Griffin.WebServer/</PackageProjectUrl>
+    <Copyright>Copyright © Jonas Gauffin 2015</Copyright>
+    <Company>Gauffin Interactive AB</Company>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <DocumentationFile>bin\Release\Griffin.WebServer.XML</DocumentationFile>
