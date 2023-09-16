@@ -3,7 +3,6 @@
     <TargetFrameworks>netstandard2.0;net6.0</TargetFrameworks>
     <OutputType>Library</OutputType>
     <SolutionDir Condition="$(SolutionDir) == '' Or $(SolutionDir) == '*Undefined*'">..\</SolutionDir>
-    <RestorePackages>true</RestorePackages>
     <Title>Griffin.WebServer</Title>
     <Product>Griffin.WebServer</Product>
     <Description>A web server built on top of Griffin.Framework</Description>
@@ -22,5 +21,4 @@
   <ItemGroup>
     <PackageReference Include="Griffin.Framework" Version="2.1.1" />
   </ItemGroup>
-  <Import Project="$(SolutionDir)\.nuget\nuget.targets" />
 </Project>
