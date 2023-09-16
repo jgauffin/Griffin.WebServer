@@ -4,11 +4,12 @@
     <OutputType>Exe</OutputType>
     <SolutionDir Condition="$(SolutionDir) == '' Or $(SolutionDir) == '*Undefined*'">..\..\</SolutionDir>
     <RestorePackages>true</RestorePackages>
-    <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
   </PropertyGroup>
+
   <ItemGroup>
     <ProjectReference Include="..\..\Griffin.WebServer\Griffin.WebServer.csproj" />
   </ItemGroup>
+
   <ItemGroup>
     <PackageReference Include="Griffin.Framework" Version="2.1.1" />
   </ItemGroup>
