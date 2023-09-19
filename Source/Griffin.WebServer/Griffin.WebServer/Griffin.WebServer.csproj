@@ -9,13 +9,15 @@
     <Version>0.5.3</Version>
     <RepositoryType>git</RepositoryType>
     <RepositoryUrl>https://github.com/jgauffin/Griffin.WebServer/</RepositoryUrl>
+    <PackageLicenseExpression>Apache-2.0</PackageLicenseExpression>
     <PackageProjectUrl>https://github.com/jgauffin/Griffin.WebServer/</PackageProjectUrl>
+    <PackageTags>webserver http</PackageTags>
     <Copyright>Copyright © Jonas Gauffin 2015</Copyright>
     <Company>Gauffin Interactive AB</Company>
   </PropertyGroup>
 
-  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
-    <DocumentationFile>bin\Release\Griffin.WebServer.xml</DocumentationFile>
+  <PropertyGroup Condition=" '$(Configuration)' == 'Release' ">
+    <GenerateDocumentationFile>True</GenerateDocumentationFile>
   </PropertyGroup>
 
   <ItemGroup>
