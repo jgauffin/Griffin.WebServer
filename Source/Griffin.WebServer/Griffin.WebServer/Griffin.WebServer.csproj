@@ -1,20 +1,26 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
-    <TargetFrameworks>netstandard2.0;net45;net451;net461</TargetFrameworks>
+    <TargetFrameworks>netstandard2.0;net6.0</TargetFrameworks>
     <OutputType>Library</OutputType>
     <SolutionDir Condition="$(SolutionDir) == '' Or $(SolutionDir) == '*Undefined*'">..\</SolutionDir>
-    <RestorePackages>true</RestorePackages>
-    <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
+    <Title>Griffin.WebServer</Title>
+    <Product>Griffin.WebServer</Product>
+    <Description>A web server built on top of Griffin.Framework</Description>
+    <Version>0.5.3</Version>
+    <RepositoryType>git</RepositoryType>
+    <RepositoryUrl>https://github.com/jgauffin/Griffin.WebServer/</RepositoryUrl>
+    <PackageLicenseExpression>Apache-2.0</PackageLicenseExpression>
+    <PackageProjectUrl>https://github.com/jgauffin/Griffin.WebServer/</PackageProjectUrl>
+    <PackageTags>webserver http</PackageTags>
+    <Copyright>Copyright © Jonas Gauffin 2015</Copyright>
+    <Company>Gauffin Interactive AB</Company>
   </PropertyGroup>
-  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
-    <DocumentationFile>bin\Release\Griffin.WebServer.XML</DocumentationFile>
+
+  <PropertyGroup Condition=" '$(Configuration)' == 'Release' ">
+    <GenerateDocumentationFile>True</GenerateDocumentationFile>
   </PropertyGroup>
+
   <ItemGroup>
-    <PackageReference Include="Griffin.Framework">
-      <Version>2.1.1</Version>
-    </PackageReference>
-    <PackageReference Include="Microsoft.CSharp" Version="4.7.0" />
-    <PackageReference Include="System.Data.DataSetExtensions" Version="4.5.0" />
+    <PackageReference Include="Griffin.Framework" Version="2.1.1" />
   </ItemGroup>
-  <Import Project="$(SolutionDir)\.nuget\nuget.targets" />
 </Project>
